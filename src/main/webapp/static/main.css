@@ -1,0 +1,37 @@
+@font-face {
+    font-family: "Font1";
+    src: url(./Helvetica.ttf) format("truetype");
+}
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+.header {
+    width: 100%;
+    padding: 15px;
+}
+.header h1 {
+    font-family: arial;
+}
+.main-viewport {
+    height: 100%;
+    font-family: sans-serif, 'sans', arial;
+}
+.side-panel {
+    width: 30%;
+    float: left;
+    height: 100%;
+    background-color: #6094fa;
+}
+.main-panel {
+    height: 100%;
+    width: 70%;
+    float: right;
+    background-color: #df94ff;
+}
+.reports-wrapper {
+    margin: 15px;
+}
+
+

@@ -1,24 +1,47 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.tsvil.bugtracker.utils;
 
 import org.tsvil.bugtracker.entity.Priority;
 import org.tsvil.bugtracker.entity.State;
 
-/**
- *
- * @author Ales_Tsvil
- */
 public class EntityUtils {
-    
+
     public State resolveState(int stateId) {
-        return State.OPEN;
+        switch (stateId) {
+            case 0:
+                return State.REPORTED;
+            case 1:
+                return State.CONFIRMED;
+            case 2:
+                return State.OPEN;
+            case 3:
+                return State.NOT_A_BUG;
+            case 4:
+                return State.FIXED;
+            case 5:
+                return State.CLOSED;
+            case 6:
+                return State.PENDING;
+            default:
+                return State.OPEN;
+        }
     }
-    
+
     public Priority resolvePriority(int priorityId) {
-        return Priority.UNSPECIFIED;
+        switch (priorityId) {
+            case 0:
+                return Priority.UNSPECIFIED;
+            case 1:
+                return Priority.MINOR;
+            case 2:
+                return Priority.MEDIUM;
+            case 3:
+                return Priority.MAJOR;
+            case 4:
+                return Priority.CRITICAL;
+            case 5:
+                return Priority.BLOCKER;
+            default:
+                return Priority.UNSPECIFIED;
+        }
     }
 }

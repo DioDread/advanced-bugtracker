@@ -15,6 +15,11 @@ public class BugReportBuilder {
         return this;
     }
 
+    public BugReportBuilder name(String name) {
+        bugReport.setName(name);
+        return this;
+    }
+
     public BugReportBuilder dateReported(Date date) {
         bugReport.setDateReported(date);
         return this;
@@ -44,22 +49,22 @@ public class BugReportBuilder {
         bugReport.setState(state);
         return this;
     }
-    
+
     public BugReportBuilder dateResolved(Date date) {
         bugReport.setDateResolved(date);
         return this;
     }
-    
+
     public BugReportBuilder dateUpdated(Date date) {
         bugReport.setDateUpdated(date);
         return this;
     }
-    
+
     public BugReportBuilder project(Project project) {
         bugReport.setProject(project);
         return this;
     }
-    
+
     public BugReportBuilder labels(Label[] labels) {
         bugReport.setLabels(labels);
         return this;

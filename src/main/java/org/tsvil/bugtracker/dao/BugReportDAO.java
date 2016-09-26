@@ -6,18 +6,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.naming.ConfigurationException;
 import javax.naming.NamingException;
 import org.tsvil.bugtracker.AppConfig;
 import org.tsvil.bugtracker.entity.BugReport;
 import org.tsvil.bugtracker.entity.BugReportBuilder;
 import org.tsvil.bugtracker.entity.Label;
 import org.tsvil.bugtracker.utils.EntityUtils;
+import org.tsvil.bugtracker.utils.PageInfo;
 
 public class BugReportDAO implements DBWriter {
 
     private Connection connection;
+    private Statement statement;
     private final DBConnect dbc;
     private final EntityUtils entityUtils;
 
@@ -31,27 +35,93 @@ public class BugReportDAO implements DBWriter {
         entityUtils = new EntityUtils();
     }
 
-    public ArrayList<BugReport> getAllBugReports() throws SQLException, IOException {
-        String query = "select bug_report_id, date_reported, reporter, description, desired_resolution_date, priority,"
-                + " state, date_resolved, date_updated, project, labels from `" + AppConfig.getDbName() + "`.bug_report;";
-        Statement stmt = null;
+    public ArrayList<BugReport> getAllBugReports() throws SQLException, ConfigurationException {
+        return selectBugReports(null, null);
+    }
+
+    public BugReport findBugReportById(int id) throws SQLException, ConfigurationException {
+        return selectBugReports(id, null).get(0);
+    }
+
+    public ArrayList<BugReport> getBugReportsWithOffset(PageInfo pageInfo) throws SQLException, ConfigurationException {
+        return selectBugReports(null, pageInfo);
+    }
+
+    public void inserBugReport(BugReport br) throws SQLException, ConfigurationException {
+        try {
+            String query = "insert into `" + AppConfig.getDbName() + "`.bug_report values(" + br.getBugReportId() + ", "
+                    + br.getDateReported() + ", " + br.getReporter() + ", " + br.getDescription() + ", "
+                    + br.getDesiredResolutionDate() + ", " + br.getPriority().getValue() + ", " + br.getState().getValue() + ", "
+                    + br.getDateResolved() + ", " + br.getDateUpdated() + ", " + br.getProject().getProjectId()
+                    + ", " + Arrays.toString(br.getLabels()) + ");";
+            connection = dbc.getConnection();
+            statement = connection.createStatement();
+            statement.executeUpdate(query);
+        } catch (NamingException | IOException ex) {
+            Logger.getLogger(BugReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ConfigurationException("Application configuration failed, please contact your administrator");
+        } finally {
+            releaseResources();
+        }
+    }
+
+    public void updateBugReport(BugReport br) throws SQLException, ConfigurationException {
+        try {
+            String query = "update `" + AppConfig.getDbName() + "`bug_report set bug_report_id=" + br.getBugReportId()
+                    + ", name=" + br.getName() + ", date_reported=" + br.getDateReported() + ", reporter="
+                    + br.getReporter() + ", description=" + br.getDescription() + ", desired_resolution_date="
+                    + br.getDesiredResolutionDate() + ", priority=" + br.getPriority().getValue() + ", state="
+                    + br.getState().getValue() + ", date_resolved=" + br.getDateResolved() + ", date_updated="
+                    + br.getDateUpdated() + ", project=" + br.getProject().getProjectId() + ", labels="
+                    + Arrays.toString(br.getLabels()) + ";";
+            connection = dbc.getConnection();
+            statement = connection.createStatement();
+            statement.executeUpdate(query);
+        } catch (NamingException | IOException ex) {
+            Logger.getLogger(BugReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ConfigurationException("Application configuration failed, please contact your administrator");
+        } finally {
+            releaseResources();
+        }
+    }
+
+    public void deleteBugReport(int id) throws SQLException, ConfigurationException {
+        try {
+            String query = "delete from `" + AppConfig.getDbName() + "`.bug_report where bug_report_id=" + id + ";";
+            connection = dbc.getConnection();
+            statement = connection.createStatement();
+            statement.executeUpdate(query);
+        } catch (NamingException | IOException ex) {
+            Logger.getLogger(BugReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ConfigurationException("Application configuration failed, please contact your administrator");
+        } finally {
+            releaseResources();
+        }
+    }
+
+    private ArrayList<BugReport> selectBugReports(Integer id, PageInfo pageInfo) throws SQLException, ConfigurationException {
+        String condition = ";";
+        if (id != null) {
+            condition = "where bug_report_id=" + id + ";";
+        } else if (pageInfo != null) {
+            condition = "limit " + pageInfo.limit + " offset " + pageInfo.offset + ";";
+        }
         ArrayList<BugReport> allBugReports = new ArrayList<>();
         try {
+            String query = "select bug_report_id, name, date_reported, reporter, description, desired_resolution_date, priority,"
+                    + " state, date_resolved, date_updated, project, labels from `" + AppConfig.getDbName() + "`.bug_report"
+                    + condition;
             connection = dbc.getConnection();
-            stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
+            statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
                 allBugReports.add(extractBugReportFromRs(rs));
             }
-        } catch (SQLException | NamingException | IOException ex) {
+        } catch (NamingException | IOException ex) {
             Logger.getLogger(BugReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ConfigurationException("Application configuration failed, please contact your administrator");
         } finally {
-            if (stmt != null) {
-                stmt.close();
-            }
-            if (connection != null) {
-                connection.close();
-            }
+            releaseResources();
         }
 
         return allBugReports;
@@ -59,7 +129,9 @@ public class BugReportDAO implements DBWriter {
 
     private BugReport extractBugReportFromRs(ResultSet rs) throws SQLException {
         BugReportBuilder builder = new BugReportBuilder();
-        BugReport result = builder.bugReportId(rs.getLong("bug_report_id"))
+        BugReport result = builder
+                .bugReportId(rs.getLong("bug_report_id"))
+                .name(rs.getString("name"))
                 .dateReported(rs.getDate("date_reported"))
                 .reporter(rs.getString("reporter"))
                 .description(rs.getString("description"))
@@ -78,17 +150,22 @@ public class BugReportDAO implements DBWriter {
         Label[] labels = null;
         if (labelsStr == null) {
             return labels;
-        } 
+        }
         String[] ids = labelsStr.split(",");
-        
+
         for (int i = 0; i < 0; i++) {
             labels[i] = labelDAO.getLabelById(Integer.parseInt(ids[i]));
         }
         return labels;
     }
 
-    public void doTest() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void releaseResources() throws SQLException {
+        if (statement != null) {
+            statement.close();
+        }
+        if (connection != null) {
+            connection.close();
+        }
     }
 
 }

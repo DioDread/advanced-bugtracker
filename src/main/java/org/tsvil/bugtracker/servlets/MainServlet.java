@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.naming.ConfigurationException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,9 +25,11 @@ public class MainServlet extends HttpServlet {
             reports = bugReportDAO.getAllBugReports();
         } catch (SQLException ex) {
             Logger.getLogger(MainServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ConfigurationException ex) {
+            Logger.getLogger(MainServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        req.setAttribute("message", "text");
+        req.setAttribute("reports", reports);
         req.getRequestDispatcher("/main-view.jsp").forward(req, resp);
     }
 

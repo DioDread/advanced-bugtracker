@@ -5,6 +5,7 @@ import java.util.Date;
 public class BugReport {
 
     private long bugReportId;
+    private String name;
     private Date dateReported;
     private String reporter;
     private String description;
@@ -19,8 +20,9 @@ public class BugReport {
     public BugReport() {
     }
 
-    public BugReport(long id, Date reported, String reporter, Priority priority, State state, Project project) {
+    public BugReport(long id, String name, Date reported, String reporter, Priority priority, State state, Project project) {
         this.bugReportId = id;
+        this.name = name;
         this.dateReported = reported;
         this.reporter = reporter;
         this.priority = priority;
@@ -180,5 +182,19 @@ public class BugReport {
      */
     public void setLabels(Label[] labels) {
         this.labels = labels;
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 }
