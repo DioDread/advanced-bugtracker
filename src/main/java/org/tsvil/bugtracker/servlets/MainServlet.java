@@ -2,6 +2,7 @@ package org.tsvil.bugtracker.servlets;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -9,19 +10,22 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.tsvil.bugtracker.dao.BugReportDAO;
+import org.tsvil.bugtracker.entity.BugReport;
 
 public class MainServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        BugReportDAO bugReportedDAO = new BugReportDAO();
-        
+
+        BugReportDAO bugReportDAO = new BugReportDAO();
+        ArrayList<BugReport> reports = new ArrayList<>();
+
         try {
-            bugReportedDAO.doTest();
+            reports = bugReportDAO.getAllBugReports();
         } catch (SQLException ex) {
             Logger.getLogger(MainServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         req.setAttribute("message", "text");
         req.getRequestDispatcher("/main-view.jsp").forward(req, resp);
     }

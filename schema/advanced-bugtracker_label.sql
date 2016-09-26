@@ -18,28 +18,28 @@ USE `advanced-bugtracker`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `bug_state`
+-- Table structure for table `label`
 --
 
-DROP TABLE IF EXISTS `bug_state`;
+DROP TABLE IF EXISTS `label`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `bug_state` (
-  `bug_state_id` int(11) NOT NULL,
+CREATE TABLE `label` (
+  `label_id` int(11) NOT NULL,
   `name` varchar(45) NOT NULL,
-  PRIMARY KEY (`bug_state_id`),
-  UNIQUE KEY `bug_state_id_UNIQUE` (`bug_state_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=cp1250;
+  `color` int(11) NOT NULL,
+  PRIMARY KEY (`label_id`),
+  UNIQUE KEY `label_id_UNIQUE` (`label_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `bug_state`
+-- Dumping data for table `label`
 --
 
-LOCK TABLES `bug_state` WRITE;
-/*!40000 ALTER TABLE `bug_state` DISABLE KEYS */;
-INSERT INTO `bug_state` VALUES (0,'reported'),(1,'confirmed'),(2,'open'),(3,'not a bug'),(4,'fixed'),(5,'closed'),(6,'pending');
-/*!40000 ALTER TABLE `bug_state` ENABLE KEYS */;
+LOCK TABLES `label` WRITE;
+/*!40000 ALTER TABLE `label` DISABLE KEYS */;
+/*!40000 ALTER TABLE `label` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -51,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-09-26 17:46:50
+-- Dump completed on 2016-09-26 17:46:51

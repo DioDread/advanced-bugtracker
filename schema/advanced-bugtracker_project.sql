@@ -1,8 +1,10 @@
+CREATE DATABASE  IF NOT EXISTS `advanced-bugtracker` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `advanced-bugtracker`;
 -- MySQL dump 10.13  Distrib 5.7.12, for Win64 (x86_64)
 --
--- Host: localhost    Database: advanced-bugtracker
+-- Host: 127.0.0.1    Database: advanced-bugtracker
 -- ------------------------------------------------------
--- Server version	5.6.33-log
+-- Server version	5.7.15-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -24,7 +26,7 @@ DROP TABLE IF EXISTS `project`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project` (
   `project_id` int(11) NOT NULL,
-  `projectcol` varchar(45) NOT NULL,
+  `project` varchar(45) NOT NULL,
   PRIMARY KEY (`project_id`),
   UNIQUE KEY `project_id_UNIQUE` (`project_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=cp1250;
@@ -36,6 +38,7 @@ CREATE TABLE `project` (
 
 LOCK TABLES `project` WRITE;
 /*!40000 ALTER TABLE `project` DISABLE KEYS */;
+INSERT INTO `project` VALUES (0,'Main Project'),(1,'Second Project'),(2,'Another Project'),(3,'Some Small Additional Project');
 /*!40000 ALTER TABLE `project` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -48,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-09-26  1:28:28
+-- Dump completed on 2016-09-26 17:46:51

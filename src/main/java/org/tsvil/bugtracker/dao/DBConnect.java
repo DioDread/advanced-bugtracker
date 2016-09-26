@@ -1,25 +1,22 @@
 package org.tsvil.bugtracker.dao;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import org.tsvil.bugtracker.AppConfig;
 
 public class DBConnect {
 
-    private final DataSource source;
-    private final Context initialContext;
-    
-    private static final String DB_RESOURCE_NAME = "java:/comp/env/jdbc/advanced-bugtracker";
+    private DataSource source;
+    private Context initialContext;
 
-    public DBConnect() throws NamingException, SQLException {
+    public Connection getConnection() throws NamingException, SQLException, IOException {
         initialContext = new InitialContext();
-        source = (DataSource) initialContext.lookup(DB_RESOURCE_NAME);
-    }
-    
-    public Connection getConnection() throws SQLException {
+        source = (DataSource) initialContext.lookup(AppConfig.getDbResourceName());
         return source.getConnection();
     }
 }
