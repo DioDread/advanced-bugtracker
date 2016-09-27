@@ -5,6 +5,9 @@
  */
 package org.tsvil.bugtracker.entity;
 
+import javax.json.Json;
+import javax.json.JsonValue;
+
 /**
  *
  * @author Ales_Tsvil
@@ -60,5 +63,13 @@ public class Label {
      */
     public void setColor(int color) {
         this.color = color;
+    }
+    
+    public JsonValue toJson() {
+        return Json.createObjectBuilder()
+                .add("labelId", labelId)
+                .add("name", name)
+                .add("color", color)
+                .build();
     }
 }

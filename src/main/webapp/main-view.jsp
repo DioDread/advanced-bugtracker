@@ -33,7 +33,7 @@
                     <table class="bugreports">
                         <tr>
                             <th>
-                                Name
+                                Title
                             </th>
                             <th>
                                 Reporter
@@ -43,8 +43,8 @@
                             </th>
                         </tr>
                         <c:forEach items="${reports}" var="report">
-                            <tr>
-                                <td><a class="bug-link" href="<c:url value="/details?id=${report.bugReportId}" />"><c:out value="${report.name}" /></a></td>
+                            <tr bug-id="<c:out value="${report.bugReportId}" />" class="bug-report-record">
+                                <td><c:out value="${report.name}" /></td>
                                 <td><c:out value="${report.reporter}" /></td>
                                 <td><c:out value="${report.dateReported}" /></td>
                             </tr>
@@ -58,5 +58,7 @@
                 </div>
             </div>
         </div>
+        <script src="<c:url value="/static/app/ajax.js"/>"></script>
+        <script src="<c:url value="/static/app/main.js"/>"></script>
     </body>
 </html>

@@ -37,19 +37,19 @@ public class BugReportDAO implements DBWriter {
     }
 
     public ArrayList<BugReport> getAllBugReports() throws SQLException, ConfigurationException {
-        return selectBugReports(null, null, null);
+        return selectBugReports(null, null, null, true);
     }
 
     public BugReport findBugReportById(int id) throws SQLException, ConfigurationException {
-        return selectBugReports(id, null, null).get(0);
+        return selectBugReports(id, null, null, false).get(0);
     }
 
     public ArrayList<BugReport> getBugReportsWithOffset(PageInfo pageInfo) throws SQLException, ConfigurationException {
-        return selectBugReports(null, pageInfo, null);
+        return selectBugReports(null, pageInfo, null, true);
     }
 
     public ArrayList<BugReport> getBugReportsWithFilterAndOffset(PageInfo pageInfo, State filter) throws SQLException, ConfigurationException {
-        return selectBugReports(null, pageInfo, filter);
+        return selectBugReports(null, pageInfo, filter, true);
     }
 
     public void inserBugReport(BugReport br) throws SQLException, ConfigurationException {
@@ -104,7 +104,7 @@ public class BugReportDAO implements DBWriter {
         }
     }
 
-    private ArrayList<BugReport> selectBugReports(Integer id, PageInfo pageInfo, State filter) throws SQLException, ConfigurationException {
+    private ArrayList<BugReport> selectBugReports(Integer id, PageInfo pageInfo, State filter, boolean isShortRecord) throws SQLException, ConfigurationException {
         String condition = ";";
         if (id != null) {
             condition = " where bug_report_id=" + id;
@@ -114,16 +114,23 @@ public class BugReportDAO implements DBWriter {
             condition += " limit " + pageInfo.limit + " offset " + pageInfo.offset;
         }
         condition += ";";
+
+        String fieldsToSelect;
+        if (isShortRecord) {
+            fieldsToSelect = "bug_report_id, name, date_reported, reporter, priority, state";
+        } else {
+            fieldsToSelect = "bug_report_id, name, date_reported, reporter, description, desired_resolution_date, "
+                    + "priority, state, date_resolved, date_updated, project, labels";
+        }
         ArrayList<BugReport> allBugReports = new ArrayList<>();
         try {
-            String query = "select bug_report_id, name, date_reported, reporter, description, desired_resolution_date, priority,"
-                    + " state, date_resolved, date_updated, project, labels from `" + AppConfig.getDbName() + "`.bug_report"
-                    + condition;
+
+            String query = "select " + fieldsToSelect + " from `" + AppConfig.getDbName() + "`.bug_report" + condition;
             connection = dbc.getConnection();
             statement = connection.createStatement();
             ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
-                allBugReports.add(extractBugReportFromRs(rs));
+                allBugReports.add(isShortRecord ? extractShortBugReporFromRs(rs) : extractBugReportFromRs(rs));
             }
         } catch (NamingException | IOException ex) {
             Logger.getLogger(BugReportDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -133,6 +140,19 @@ public class BugReportDAO implements DBWriter {
         }
 
         return allBugReports;
+    }
+
+    private BugReport extractShortBugReporFromRs(ResultSet rs) throws SQLException {
+        BugReportBuilder builder = new BugReportBuilder();
+        BugReport result = builder
+                .bugReportId(rs.getLong("bug_report_id"))
+                .name(rs.getString("name"))
+                .dateReported(rs.getDate("date_reported"))
+                .reporter(rs.getString("reporter"))
+                .priority(entityUtils.resolvePriority(rs.getInt("priority")))
+                .state(entityUtils.resolveState(rs.getInt("state")))
+                .build();
+        return result;
     }
 
     private BugReport extractBugReportFromRs(ResultSet rs) throws SQLException {

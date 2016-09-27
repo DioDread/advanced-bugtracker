@@ -1,6 +1,10 @@
 package org.tsvil.bugtracker.entity;
 
 import java.util.Date;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
 
 public class BugReport {
 
@@ -196,5 +200,30 @@ public class BugReport {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    public JsonObject toJson() {
+        JsonArrayBuilder labelsJsonBuildr = Json.createArrayBuilder();
+        JsonArray labelsJsonArray = Json.createArrayBuilder().build();
+        if (labels != null) {
+            for (Label label : labels) {
+                labelsJsonBuildr.add(label.toJson());
+            }
+            labelsJsonArray = labelsJsonBuildr.build();
+        } 
+        
+        return Json.createObjectBuilder()
+                .add("bugReportId", bugReportId)
+                .add("name", name)
+                .add("reporter", reporter)
+                .add("description", description)
+                .add("dateReported", dateReported.toString())
+                .add("priority", priority.getValue())
+                .add("state", state.getValue())
+                .add("dateResolved", dateResolved != null ? dateResolved.toString() : "")
+                .add("dateUpdated", dateUpdated != null ? dateUpdated.toString() : "")
+                .add("labels", labelsJsonArray)
+                .add("project", project != null ? project.getName() : "")
+                .build();
     }
 }
