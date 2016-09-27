@@ -15,6 +15,7 @@ import org.tsvil.bugtracker.AppConfig;
 import org.tsvil.bugtracker.entity.BugReport;
 import org.tsvil.bugtracker.entity.BugReportBuilder;
 import org.tsvil.bugtracker.entity.Label;
+import org.tsvil.bugtracker.entity.State;
 import org.tsvil.bugtracker.utils.EntityUtils;
 import org.tsvil.bugtracker.utils.PageInfo;
 
@@ -36,15 +37,19 @@ public class BugReportDAO implements DBWriter {
     }
 
     public ArrayList<BugReport> getAllBugReports() throws SQLException, ConfigurationException {
-        return selectBugReports(null, null);
+        return selectBugReports(null, null, null);
     }
 
     public BugReport findBugReportById(int id) throws SQLException, ConfigurationException {
-        return selectBugReports(id, null).get(0);
+        return selectBugReports(id, null, null).get(0);
     }
 
     public ArrayList<BugReport> getBugReportsWithOffset(PageInfo pageInfo) throws SQLException, ConfigurationException {
-        return selectBugReports(null, pageInfo);
+        return selectBugReports(null, pageInfo, null);
+    }
+
+    public ArrayList<BugReport> getBugReportsWithFilterAndOffset(PageInfo pageInfo, State filter) throws SQLException, ConfigurationException {
+        return selectBugReports(null, pageInfo, filter);
     }
 
     public void inserBugReport(BugReport br) throws SQLException, ConfigurationException {
@@ -99,13 +104,16 @@ public class BugReportDAO implements DBWriter {
         }
     }
 
-    private ArrayList<BugReport> selectBugReports(Integer id, PageInfo pageInfo) throws SQLException, ConfigurationException {
+    private ArrayList<BugReport> selectBugReports(Integer id, PageInfo pageInfo, State filter) throws SQLException, ConfigurationException {
         String condition = ";";
         if (id != null) {
-            condition = "where bug_report_id=" + id + ";";
+            condition = " where bug_report_id=" + id;
+        } else if (filter != null) {
+            condition = " where state=" + filter.getValue();
         } else if (pageInfo != null) {
-            condition = "limit " + pageInfo.limit + " offset " + pageInfo.offset + ";";
+            condition += " limit " + pageInfo.limit + " offset " + pageInfo.offset;
         }
+        condition += ";";
         ArrayList<BugReport> allBugReports = new ArrayList<>();
         try {
             String query = "select bug_report_id, name, date_reported, reporter, description, desired_resolution_date, priority,"

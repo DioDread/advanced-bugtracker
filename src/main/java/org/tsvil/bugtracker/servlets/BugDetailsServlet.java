@@ -11,7 +11,7 @@ public class BugDetailsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("message", "text");
-        req.getRequestDispatcher("/main-view.j sp").forward(req, resp);
+        req.getRequestDispatcher("/bug-details.jsp").forward(req, resp);
     }
 
     @Override
