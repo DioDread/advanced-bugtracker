@@ -16,7 +16,7 @@
  * @returns {Ajax} - object for handling ajax, success, failure and progress callbacks need to be registred as listed
  * properties for correct work.
  */
-var Ajax = function (method, url, withCredentials) {
+var Ajax = function (method, url, headers, withCredentials) {
     var xhr = new XMLHttpRequest(), STATUS_SUCCESS = 200, STATUS_FAILURE = 400,
             self = this;
     if (!xhr) {
@@ -30,16 +30,25 @@ var Ajax = function (method, url, withCredentials) {
     }
 
     xhr.addEventListener('load', function (ev) {
+        var resp = xhr.response;
+        
         if (!self.success) {
             throw new Error('no async handler for successful response handling are registered.');
         }
         if (!self.failure) {
             throw new Error('no async handler for failed response handling are registered.');
         }
+        if (isJsonExpected()) {
+            try {
+                resp = JSON.parse(resp);
+            } catch (e) {
+                console.warn('Ajax: expected json, but server response ins\'t valid Json object');
+            }
+        }
         if (xhr.status >= STATUS_SUCCESS && xhr.status < STATUS_FAILURE) {
-            self.success(xhr.response);
+            self.success(resp);
         } else {
-            self.failure(xhr.response);
+            self.failure(resp);
         }
     });
 
@@ -63,12 +72,32 @@ var Ajax = function (method, url, withCredentials) {
      */
     this.call = function () {
         xhr.open(method, url);
+        if (headers) {
+            for (var header in headers) {
+                if (!headers.hasOwnProperty(header))
+                    continue;
+                xhr.setRequestHeader(header, headers[header]);
+            }
+        }
         if (method.toUpperCase() == 'POST' || method.toUpperCase() == 'PUT') {
             xhr.send(this.data);
         } else {
             xhr.send();
         }
     };
+
+    function isJsonExpected() {
+        if (!headers) {
+            return false;
+        }
+        for (var header in headers) {
+            if (!headers.hasOwnProperty(header))
+                continue;
+            if (header.toLowerCase() == 'accept' && headers[header].indexOf('json') > 0)
+                return true;
+        }
+        return false;
+    }
 };
 
 

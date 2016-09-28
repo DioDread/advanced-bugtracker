@@ -54,11 +54,34 @@
             </div>
             <div class="main-panel">
                 <div class="reports-wrapper">
-                    <h3>Bug details.</h3>
+                    <form name="bug-report-details">
+                        <h2 class="bug-report-title">Bug details.</h2>
+                        <h4>Details</h4>
+                        <div class="bug-details">
+                            <p class="date-reported"></p>
+                            <input type="date" name="dateReported" style="display: none;"> 
+                            <p class="date-resolved"></p>
+                            <input type="date" name="dateResolved" style="display: none;">
+                            <p class="date-updated"></p>
+                            <input type="date" name="dateUpdated" style="display: none;">
+                            <p class="reporter"></p>
+                            <input type="date" name="reporter" style="display: none;">
+                            <p class="labesl"></p>
+                            <p class="priority"></p>
+                            <p class="state"></p>
+                            <p class="project"></p>
+                        </div>
+                        <h4>Description</h4>
+                        <p class="bug-description"></p>
+                        <textarea class="bug-description-edit" style="display: none;"></textarea>
+                        <h4>Comments</h4>
+                    </form>
                 </div>
             </div>
         </div>
-        <script src="<c:url value="/static/app/ajax.js"/>"></script>
+        <script src="<c:url value="/static/app/utils/polyfill.js"/>"></script>
+        <script src="<c:url value="/static/app/utils/utils.js"/>"></script>
+        <script src="<c:url value="/static/app/utils/ajax.js"/>"></script>
         <script src="<c:url value="/static/app/main.js"/>"></script>
     </body>
 </html>
