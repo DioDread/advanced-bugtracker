@@ -17,10 +17,15 @@ div, button {
     font-family: 'Roboto', sans-serif;
     margin: 0;
 }
-.report-a-bug {
+.btn-lg {
     font-size: 22px;
     height: 45px;
     width: 180px;
+}
+.btn-md {
+    font-size: 18px;
+    height: 40px;
+    width: 100px;
 }
 h3 {
     font-family: 'Roboto', sans-serif;
@@ -74,4 +79,31 @@ h3 {
 
 tr:nth-child(even){
     background-color: #98b9ff
+}
+.new-bug-report-dialog {
+    position: absolute;
+    width: 600px;
+    height: 400px;
+    top: 300px;
+    left: 500px;
+    background-color: #d0e9ff;
+}
+.new-bug-report-dialog-title {
+    background-color: #2e57ea;
+    margin: 0;
+    padding: 7px;
+    color: #fff;
+}
+.dialog-cont {
+    padding: 5px;
+}
+.dialog-bug-description {
+    margin: 0px;
+    height: 200px;
+    width: 585px;
+
+}
+.dialog-close-btn {
+    float: right;
+    cursor: pointer;
 }

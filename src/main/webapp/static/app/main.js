@@ -1,9 +1,12 @@
 (function () {
-    var recordTableRows = selectAll('.bug-report-record');
+    var recordTableRows = selectAll('.bug-report-record'),
+        newBugBtn = select('.report-a-bug');
     
     recordTableRows.forEach(function (el) {
         el.addEventListener('click', handleBugRecordClick);
     });
+    
+    newBugBtn.addEventListener('click', showNewBugDialog);
     
     function handleBugRecordClick(evt) {
         var detailsHref = document.location.href + 'details?id=' + this.getAttribute('bug-id'),
@@ -39,6 +42,17 @@
         projectEl.innerText = report.project;
         
         descriptionEl.innerText = report.description;
+    }
+    
+    function showNewBugDialog() {
+        var dialog = select('.new-bug-report-dialog'),
+            closeBtn = select('.dialog-close-btn');
+        
+        dialog.style.display = 'block';
+        
+        closeBtn.addEventListener('click', function () {
+            dialog.style.display = 'none';
+        });
     }
 }());
 
