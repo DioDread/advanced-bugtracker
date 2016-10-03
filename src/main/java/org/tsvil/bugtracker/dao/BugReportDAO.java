@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -52,13 +53,21 @@ public class BugReportDAO implements DBWriter {
         return selectBugReports(null, pageInfo, filter, true);
     }
 
-    public void inserBugReport(BugReport br) throws SQLException, ConfigurationException {
+    public void insertBugReport(BugReport br) throws SQLException, ConfigurationException {
         try {
-            String query = "insert into `" + AppConfig.getDbName() + "`.bug_report values(" + br.getBugReportId() + ", "
-                    + br.getDateReported() + ", " + br.getReporter() + ", " + br.getDescription() + ", "
-                    + br.getDesiredResolutionDate() + ", " + br.getPriority().getValue() + ", " + br.getState().getValue() + ", "
-                    + br.getDateResolved() + ", " + br.getDateUpdated() + ", " + br.getProject().getProjectId()
-                    + ", " + Arrays.toString(br.getLabels()) + ");";
+            SimpleDateFormat sdtf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat sdt = new java.text.SimpleDateFormat("yyyy-MM-dd");
+            String desiredResolutionDate = br.getDesiredResolutionDate() != null ? "'" + sdt.format(br.getDesiredResolutionDate()) + "'" : null;
+            String dateResolved = br.getDateResolved() != null ? "'" + sdtf.format(br.getDateResolved()) + "'" : null;
+            String dateUpdated = br.getDateUpdated() != null ? "'" + sdtf.format(br.getDateUpdated()) + "'" : null;
+            String query = "insert into `" + AppConfig.getDbName() + "`.bug_report values(" + br.getBugReportId() + ", '"
+                    + br.getName() + "', '" + sdtf.format(br.getDateReported()) + "', '" + br.getReporter() + "', '" + br.getDescription() + "', "
+                    + desiredResolutionDate + ", "
+                    + br.getPriority().getValue() + ", " + br.getState().getValue() + ", "
+                    + dateResolved + ", "
+                    + dateUpdated + ", "
+                    + br.getProject().getProjectId() + ", "
+                    + Arrays.toString(br.getLabels()) + ");";
             connection = dbc.getConnection();
             statement = connection.createStatement();
             statement.executeUpdate(query);
@@ -140,6 +149,25 @@ public class BugReportDAO implements DBWriter {
         }
 
         return allBugReports;
+    }
+
+    public int getLastId() throws SQLException, ConfigurationException {
+        int result = -1;
+        try {
+            String query = "select count(bug_report_id) as id_count from `" + AppConfig.getDbName() + "`.bug_report;";
+            connection = dbc.getConnection();
+            statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                result = rs.getInt("id_count");
+            }
+        } catch (NamingException | IOException ex) {
+            Logger.getLogger(BugReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ConfigurationException("Application configuration failed, please contact your administrator");
+        } finally {
+            releaseResources();
+        }
+        return result;
     }
 
     private BugReport extractShortBugReporFromRs(ResultSet rs) throws SQLException {

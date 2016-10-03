@@ -29,6 +29,10 @@
         <servlet-name>Statistics</servlet-name>
         <servlet-class>org.tsvil.bugtracker.servlets.StatisticsServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Project</servlet-name>
+        <servlet-class>org.tsvil.bugtracker.servlets.ProjectServlet</servlet-class>
+    </servlet>
     
     <servlet-mapping>
         <servlet-name>Main</servlet-name>
@@ -41,6 +45,10 @@
     <servlet-mapping>
         <servlet-name>Statistics</servlet-name>
         <url-pattern>/statistics/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Project</servlet-name>
+        <url-pattern>/project/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>default</servlet-name>

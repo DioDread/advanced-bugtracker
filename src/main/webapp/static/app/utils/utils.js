@@ -5,7 +5,7 @@
  */
 var select = function(selector) {
     if (selector && document.querySelector){
-        return document.querySelector(selector);
+        return document.querySelector.bind(document)(selector)
     }
     return null;
 };

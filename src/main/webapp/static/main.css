@@ -83,9 +83,9 @@ tr:nth-child(even){
 .new-bug-report-dialog {
     position: absolute;
     width: 600px;
-    height: 400px;
-    top: 300px;
-    left: 500px;
+    height: 440px;
+    top: 200px;
+    left: 636px;
     background-color: #d0e9ff;
 }
 .new-bug-report-dialog-title {
@@ -106,4 +106,8 @@ tr:nth-child(even){
 .dialog-close-btn {
     float: right;
     cursor: pointer;
+}
+.submit-a-bug-cont {
+    text-align: center;
+    padding-top: 10px;
 }

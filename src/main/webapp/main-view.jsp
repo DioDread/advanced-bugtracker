@@ -91,7 +91,7 @@
             </div>
         </div>
 
-        <div class="new-bug-report-dialog" style="display: none;">
+        <div class="new-bug-report-dialog" draggable="true" style="display: none;">
             <h3 class="new-bug-report-dialog-title">Report a Bug.<div class="dialog-close-btn">X</div></h3>
             <div class="dialog-cont">
                 <form name="new-bug-report">
@@ -106,13 +106,20 @@
                     <p class="labesl">Labels</p>
                     <label for="priority">Select Priority</label>
                     <select name="priority">
-                        <option value="">Unspecified</option>
+                        <option value="0">Unspecified</option>
+                        <option value="1">Minor</option>
+                        <option value="2">Medium</option>
+                        <option value="3">Major</option>
+                        <option value="4">Critical</option>
+                        <option value="5">Blocker</option>
                     </select>
                     <label for="project">Select Project</label>
                     <select name="project">
                         <option value="">Unspecified</option>
                     </select>
-                    <input type="submit" value="Submit" class="btn-md">
+                    <div class="submit-a-bug-cont">
+                        <input type="submit" value="Submit" class="btn-md submit-a-bug">
+                    </div>
                 </form>
             </div>
         </div>
