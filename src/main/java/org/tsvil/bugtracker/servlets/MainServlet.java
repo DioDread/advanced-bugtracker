@@ -2,7 +2,6 @@ package org.tsvil.bugtracker.servlets;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,14 +16,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.tsvil.bugtracker.dao.BugReportDAO;
 import org.tsvil.bugtracker.dao.ProjectDAO;
 import org.tsvil.bugtracker.entity.BugReport;
-import org.tsvil.bugtracker.entity.Priority;
 import org.tsvil.bugtracker.entity.Project;
 import org.tsvil.bugtracker.entity.State;
 import org.tsvil.bugtracker.utils.EntityUtils;
 
 public class MainServlet extends HttpServlet {
 
-    private EntityUtils entityUtils = new EntityUtils();
+    private final EntityUtils entityUtils = new EntityUtils();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

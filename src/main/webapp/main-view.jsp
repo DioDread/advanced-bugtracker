@@ -96,15 +96,22 @@
             <div class="dialog-cont">
                 <form name="new-bug-report">
                     <label for="name">Title:</label>
-                    <input type="text" name="name">
-                    <label for="desiredResolutionDate">Desired Resolution Date</label>
+                    <input type="text" name="name" placeholder="Enter subject">
+                    <label for="desiredResolutionDate">Desired Resolution Date: </label>
                     <input type="date" name="desiredResolutionDate">
-                    <label for="description">Describe your problem</label>
+                    <label for="description">Describe your problem: </label>
                     <textarea name="description" class="dialog-bug-description"></textarea>
-                    <label for="reporter">Your Name</label>
-                    <input type="text" name="reporter">
-                    <p class="labesl">Labels</p>
-                    <label for="priority">Select Priority</label>
+                    <label for="reporter">Your Name: </label>
+                    <input type="text" name="reporter" placeholder="Enter your name">
+                    <div class="label-creator">
+                        <label class="labesl" for="label-name">Labels:</label>
+                        <input type="text" name="label-name" placeholder="Input label name">
+                        <input type="color" name="label-color" value="#07b3eb" title="Select Label Color">
+                        <input type="button" name="add-label" value="+" disabled>
+                        <div class="labels-area"></div>
+                        <input type="hidden" name="labels-data" >
+                    </div>
+                    <label for="priority">Select Priority:</label>
                     <select name="priority">
                         <option value="0">Unspecified</option>
                         <option value="1">Minor</option>
@@ -113,7 +120,7 @@
                         <option value="4">Critical</option>
                         <option value="5">Blocker</option>
                     </select>
-                    <label for="project">Select Project</label>
+                    <label for="project">Select Project:</label>
                     <select name="project">
                         <option value="">Unspecified</option>
                     </select>

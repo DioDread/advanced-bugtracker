@@ -22,4 +22,13 @@ var selectAll = function(selector) {
     return null;
 };
 
+if (!HTMLElement.prototype.select) {
+    HTMLElement.prototype.select = HTMLElement.prototype.querySelector;
+}
+
+if (!HTMLElement.prototype.selectAll) {
+    HTMLElement.prototype.selectAll = HTMLElement.prototype.querySelectorAll;
+}
+
+
 

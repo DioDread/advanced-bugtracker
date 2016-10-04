@@ -53,12 +53,23 @@
 
     function showNewBugDialog() {
         var dialog = select('.new-bug-report-dialog'),
-                closeBtn = select('.dialog-close-btn');
+                closeBtn = select('.dialog-close-btn'),
+                addLabelBtn = dialog.select('input[name=add-label]'),
+                labelName = dialog.select('input[name=label-name]');
 
         dialog.style.display = 'block';
 
         closeBtn.addEventListener('click', function () {
             dialog.style.display = 'none';
+        });
+
+        addLabelBtn.addEventListener('click', addLabel);
+        labelName.addEventListener('input', function () {
+            if (this.value.length > 0) {
+                addLabelBtn.disabled = false;
+            } else {
+                addLabelBtn.disabled = true;
+            }
         });
 
 //        select('.new-bug-report-dialog > h3').addEventListener('mousedown', moveAt);
@@ -124,6 +135,68 @@
         }
 
         ajax.call();
+    }
+
+    function addLabel() {
+        var labelsArea = this.parentNode.select('.labels-area'),
+                labelNameInput = this.parentNode.select('input[name=label-name]'),
+                colorPickerInput = this.parentNode.select('input[name=label-color]'),
+                addLabelBtn = this.parentNode.select('input[name=add-label]'),
+                labelDiv = document.createElement('div'),
+                labelRemoveBtn = document.createElement('span'),
+                labelsDataInput = this.parentNode.select('input[name=labels-data]'),
+                labelsData = [];
+
+        try {
+            labelsData = JSON.parse(labelsDataInput.value);
+            for (var i = 0; i < labelsData.length; i++) {
+                if (labelsData[i]['name'] == labelNameInput.value) {
+                    return;
+                }
+            }
+        } catch (e) {
+            labelsData = [];
+        }
+
+        labelsData.push({
+            name: labelNameInput.value,
+            color: colorPickerInput.value
+        });
+
+        labelsDataInput.value = JSON.stringify(labelsData);
+
+        renderLabel();
+        
+        addLabelBtn.disabled = true;
+        labelNameInput.value = '';
+        labelNameInput.focus();
+
+        function renderLabel() {
+            labelDiv.className = 'bug-label';
+
+            labelDiv.innerText = labelNameInput.value;
+            labelDiv.style.backgroundColor = colorPickerInput.value;
+
+            labelRemoveBtn.innerText = 'x';
+            labelRemoveBtn.className = 'bug-label-remove-btn';
+
+            labelRemoveBtn.addEventListener('click', function () {
+                var deleteIndex = -1, labels = JSON.parse(labelsDataInput.value), 
+                    labelName = this.parentNode.innerText.substring(0, this.parentNode.innerText.length - 1);
+                
+                for (var i = 0; i < labels.length; i++) {
+                    if (labels[i]['name'] == labelName) {
+                        deleteIndex = i;
+                    }
+                }
+                labels.splice(deleteIndex, 1);
+                labelsDataInput.value = JSON.stringify(labels);
+                this.parentNode.parentNode.removeChild(this.parentNode);
+            });
+
+            labelDiv.appendChild(labelRemoveBtn);
+            labelsArea.appendChild(labelDiv);
+        }
     }
 }());
 

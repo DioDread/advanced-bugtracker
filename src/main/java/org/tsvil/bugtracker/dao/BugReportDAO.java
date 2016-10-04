@@ -71,7 +71,7 @@ public class BugReportDAO implements DBWriter {
             connection = dbc.getConnection();
             statement = connection.createStatement();
             statement.executeUpdate(query);
-        } catch (NamingException | IOException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(BugReportDAO.class.getName()).log(Level.SEVERE, null, ex);
             throw new ConfigurationException("Application configuration failed, please contact your administrator");
         } finally {
@@ -91,7 +91,7 @@ public class BugReportDAO implements DBWriter {
             connection = dbc.getConnection();
             statement = connection.createStatement();
             statement.executeUpdate(query);
-        } catch (NamingException | IOException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(BugReportDAO.class.getName()).log(Level.SEVERE, null, ex);
             throw new ConfigurationException("Application configuration failed, please contact your administrator");
         } finally {
@@ -105,7 +105,7 @@ public class BugReportDAO implements DBWriter {
             connection = dbc.getConnection();
             statement = connection.createStatement();
             statement.executeUpdate(query);
-        } catch (NamingException | IOException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(BugReportDAO.class.getName()).log(Level.SEVERE, null, ex);
             throw new ConfigurationException("Application configuration failed, please contact your administrator");
         } finally {
@@ -142,8 +142,7 @@ public class BugReportDAO implements DBWriter {
                 allBugReports.add(isShortRecord ? extractShortBugReporFromRs(rs) : extractBugReportFromRs(rs));
             }
         } catch (NamingException | IOException ex) {
-            Logger.getLogger(BugReportDAO.class.getName()).log(Level.SEVERE, null, ex);
-            throw new ConfigurationException("Application configuration failed, please contact your administrator");
+            
         } finally {
             releaseResources();
         }
@@ -161,7 +160,7 @@ public class BugReportDAO implements DBWriter {
             while (rs.next()) {
                 result = rs.getInt("id_count");
             }
-        } catch (NamingException | IOException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(BugReportDAO.class.getName()).log(Level.SEVERE, null, ex);
             throw new ConfigurationException("Application configuration failed, please contact your administrator");
         } finally {
