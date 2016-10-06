@@ -51,7 +51,9 @@ public class MainServlet extends HttpServlet {
         SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
 
         String name = req.getParameter("name");
+        String reporter = req.getParameter("reporter");
         String description = req.getParameter("description");
+        String labels = req.getParameter("labels-data");
         int priority = Integer.parseInt(req.getParameter("priority"));
 
         try {
@@ -62,13 +64,14 @@ public class MainServlet extends HttpServlet {
                     bugReportDAO.getLastId(),
                     name,
                     new Date(),
-                    description,
+                    reporter,
                     entityUtils.resolvePriority(priority),
                     State.REPORTED,
                     project
             );
             newReport.setDesiredResolutionDate(desiredResolutionDate);
             newReport.setDescription(description);
+            newReport.setLabels(labels);
             bugReportDAO.insertBugReport(newReport);
         } catch (SQLException ex) {
             Logger.getLogger(MainServlet.class.getName()).log(Level.SEVERE, null, ex);

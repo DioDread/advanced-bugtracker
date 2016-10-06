@@ -66,8 +66,8 @@ public class BugReportDAO implements DBWriter {
                     + br.getPriority().getValue() + ", " + br.getState().getValue() + ", "
                     + dateResolved + ", "
                     + dateUpdated + ", "
-                    + br.getProject().getProjectId() + ", "
-                    + Arrays.toString(br.getLabels()) + ");";
+                    + br.getProject().getProjectId() + ", '"
+                    + br.getLabels() + "');";
             connection = dbc.getConnection();
             statement = connection.createStatement();
             statement.executeUpdate(query);
@@ -87,7 +87,7 @@ public class BugReportDAO implements DBWriter {
                     + br.getDesiredResolutionDate() + ", priority=" + br.getPriority().getValue() + ", state="
                     + br.getState().getValue() + ", date_resolved=" + br.getDateResolved() + ", date_updated="
                     + br.getDateUpdated() + ", project=" + br.getProject().getProjectId() + ", labels="
-                    + Arrays.toString(br.getLabels()) + ";";
+                    + br.getLabels() + ";";
             connection = dbc.getConnection();
             statement = connection.createStatement();
             statement.executeUpdate(query);
@@ -196,22 +196,9 @@ public class BugReportDAO implements DBWriter {
                 .dateResolved(rs.getDate("date_resolved"))
                 .dateUpdated(rs.getDate("date_updated"))
                 .project(projectDAO.getProjectById(rs.getInt("project")))
-                .labels(parseLabelsString(rs.getString("labels")))
+                .labels(rs.getString("labels"))
                 .build();
         return result;
-    }
-
-    private Label[] parseLabelsString(String labelsStr) {
-        Label[] labels = null;
-        if (labelsStr == null) {
-            return labels;
-        }
-        String[] ids = labelsStr.split(",");
-
-        for (int i = 0; i < 0; i++) {
-            labels[i] = labelDAO.getLabelById(Integer.parseInt(ids[i]));
-        }
-        return labels;
     }
 
     private void releaseResources() throws SQLException {

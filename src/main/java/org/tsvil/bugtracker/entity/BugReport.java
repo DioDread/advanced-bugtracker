@@ -19,7 +19,7 @@ public class BugReport {
     private Date dateResolved;
     private Date dateUpdated;
     private Project project;
-    private Label[] labels;
+    private String labels;
 
     public BugReport() {
     }
@@ -177,14 +177,14 @@ public class BugReport {
     /**
      * @return the labels
      */
-    public Label[] getLabels() {
+    public String getLabels() {
         return labels;
     }
 
     /**
      * @param labels the labels to set
      */
-    public void setLabels(Label[] labels) {
+    public void setLabels(String labels) {
         this.labels = labels;
     }
 
@@ -203,15 +203,6 @@ public class BugReport {
     }
 
     public JsonObject toJson() {
-        JsonArrayBuilder labelsJsonBuildr = Json.createArrayBuilder();
-        JsonArray labelsJsonArray = Json.createArrayBuilder().build();
-        if (labels != null) {
-            for (Label label : labels) {
-                labelsJsonBuildr.add(label.toJson());
-            }
-            labelsJsonArray = labelsJsonBuildr.build();
-        } 
-        
         return Json.createObjectBuilder()
                 .add("bugReportId", bugReportId)
                 .add("name", name)
@@ -222,7 +213,7 @@ public class BugReport {
                 .add("state", state.getValue())
                 .add("dateResolved", dateResolved != null ? dateResolved.toString() : "")
                 .add("dateUpdated", dateUpdated != null ? dateUpdated.toString() : "")
-                .add("labels", labelsJsonArray)
+                .add("labels", labels != null ? labels : "")
                 .add("project", project != null ? project.getName() : "")
                 .build();
     }

@@ -56,36 +56,66 @@
             </div>
             <div class="main-panel">
                 <div class="reports-wrapper">
+                    <button class="btn-lg edit-a-bug">Edit Bug Report</button>
                     <form name="bug-report-details">
-                        <h2 class="bug-report-title">Bug details.</h2>
-                        <h4>Details</h4>
+                        <span class="editable-control" control-type="input">
+                            <h2 class="bug-report-title data">Bug details.</h2>
+                            <input type="text" name="name" class="title-input" placeholder="Enter subject" style="display: none;">
+                        </span>
+                        <h3>Details</h3>
                         <div class="bug-details">
-                            <p class="date-reported"></p>
-                            <p class="date-resolved"></p>
-                            <p class="date-updated"></p>
-                            <p class="reporter"></p>
-                            <p class="desired-resolution-dat"></p>
-                            <input type="date" name="desiredResolutionDate" style="display: none;">
-                            <input type="text" name="reporter" style="display: none;">
-                            <p class="labesl"></p>
-                            <!--TODO: Create valid labels component, which will be display cheaps, add and delete them-->
-                            <p class="priority"></p>
-                            <select name="priority" style="display: none;">
-                                <option value="">Unspecified</option>
-                            </select>
-                            <p class="state"></p>
-                            <select name="state" style="display: none;">
-                                <option value="">Unspecified</option>
-                            </select>
-                            <p class="project"></p>
-                            <select name="project" style="display: none;">
-                                <option value="">Unspecified</option>
-                            </select>
+                            <p><span class="detail-label">Reported at: </span><span class="date-reported"></span></p>
+                            <p><span class="detail-label">Resolution date: </span><span class="date-resolved"></span></p>
+                            <p><span class="detail-label">Last updated at: </span><span class="date-updated"></span></p>
+                            <p class="editable-control" control-type="input">
+                                <span class="detail-label">Reported by: </span><span class="reporter data"></span>
+                                <input type="text" name="reporter" style="display: none;">
+                            </p>
+                            <p class="editable-control" control-type="input">
+                                <span class="detail-label">Desired resolution date: </span><span class="desired-resolution-date data"></span>
+                                <input type="date" name="desiredResolutionDate" style="display: none;">
+                            </p>
+                            <p class="editable-control" control-type="select">
+                                <span class="detail-label">Priority: </span><span class="priority data"></span>
+                                <select name="priority" style="display: none;">
+                                    <option value="0">Unspecified</option>
+                                    <option value="1">Minor</option>
+                                    <option value="2">Medium</option>
+                                    <option value="3">Major</option>
+                                    <option value="4">Critical</option>
+                                    <option value="5">Blocker</option>
+                                </select>
+                            </p>
+                            <p class="editable-control" control-type="select">
+                                <span class="detail-label">State: </span><span class="state data"></span>
+                                <select name="state" style="display: none;">
+                                    <option value="">Unspecified</option>
+                                </select>
+                            </p>
+                            <p class="editable-control" control-type="select">
+                                <span class="detail-label">Related to project: </span><span class="project data"></span>
+                                <select name="project" style="display: none;">
+                                    <option value="">Unspecified</option>
+                                </select>
+                            </p>
                         </div>
-                        <h4>Description</h4>
-                        <p class="bug-description"></p>
-                        <textarea class="bug-description-edit" style="display: none;"></textarea>
-                        <h4>Comments</h4>
+                        <h5>Labels:</h5>
+                        <div class="label-creator editable-control" control-type="colorpicker" style="display: none;">
+                            <input type="text" name="label-name" placeholder="Input label name">
+                            <input type="color" name="label-color" value="#07b3eb" title="Select Label Color">
+                            <input type="button" name="add-label" value="+" disabled>
+                            <input type="hidden" name="labels-data" >
+                        </div>
+                        <div class="labels-area data"></div>
+                        <h3>Description</h3>
+                        <p class="editable-control" control-type="textarea">
+                            <span class="bug-description data"></span>
+                            <textarea class="bug-description-edit" style="display: none;"></textarea>
+                        </p>
+                        <h3>Comments</h3>
+                        <p class="editable-control" control-type="input">
+                            <input type="submit" class="btn-md update-a-bug" value="Update Bug Report" style="display: none;">
+                        </p>
                     </form>
                 </div>
             </div>

@@ -65,7 +65,7 @@ public class BugReportBuilder {
         return this;
     }
 
-    public BugReportBuilder labels(Label[] labels) {
+    public BugReportBuilder labels(String labels) {
         bugReport.setLabels(labels);
         return this;
     }

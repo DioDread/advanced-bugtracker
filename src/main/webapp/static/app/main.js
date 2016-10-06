@@ -1,15 +1,19 @@
 (function () {
     var recordTableRows = selectAll('.bug-report-record'),
+            updateBugForm = select('form[name=bug-report-details]'),
             newBugForm = select('form[name=new-bug-report]'),
-            newBugBtn = select('.report-a-bug');
+            newBugBtn = select('.report-a-bug'),
+            editBugBtn = select('.edit-a-bug');
 
     recordTableRows.forEach(function (el) {
         el.addEventListener('click', handleBugRecordClick);
     });
 
     newBugForm.addEventListener('submit', submitBug);
+    updateBugForm.addEventListener('submit', updateBug);
 
     newBugBtn.addEventListener('click', showNewBugDialog);
+    editBugBtn.addEventListener('click', enableBugEditing);
 
     fetchProjects();
 
@@ -37,18 +41,50 @@
                 priorityEl = select('.priority'),
                 stateEl = select('.state'),
                 projectEl = select('.project'),
-                descriptionEl = select('.bug-description');
+                descriptionEl = select('.bug-description'),
+                bugReportUpdForm = select('form[name=bug-report-details]'),
+                labelsInput = bugReportUpdForm.select('input[name=labels-data]'),
+                labels;
+
+        try {
+            labels = JSON.parse(report.labels);
+        } catch (e) {
+            labels = [];
+        }
 
         bugReportTitleEl.innerText = report.name;
         dateReportedEl.innerText = report.dateReported;
         dateResolvedEl.innerText = report.dateResolved;
         dateUpdatedEl.innerText = report.dateUpdated;
         reporterEl.innerText = report.reporter;
-        priorityEl.innerText = report.priority;
-        stateEl.innerText = report.state;
+        priorityEl.innerText = resolvePriority(report.priority);
+        stateEl.innerText = resolveStatus(report.state);
         projectEl.innerText = report.project;
-
         descriptionEl.innerText = report.description;
+
+        labelsInput.value = report.labels;
+        bugReportUpdForm.select('.labels-area').innerHTML = '';
+        labels.forEach(function (el) {
+            renderLabel(bugReportUpdForm, el);
+        });
+    }
+
+    function enableBugEditing() {
+        var editableContorls = updateBugForm.selectAll('.editable-control');
+
+        editableContorls.forEach(function (el) {
+            var ctrlType = el.getAttribute('control-type');
+
+            if (ctrlType != 'colorpicker') {
+                el.select(ctrlType).style.display = 'inline';
+                if (el.select('.data')) {
+                    el.select(ctrlType).value = el.select('.data').innerText;
+                }
+                el.select('.data').style.display = 'none';
+            } else {
+                el.style.display = 'inline';
+            }
+        });
     }
 
     function showNewBugDialog() {
@@ -72,25 +108,36 @@
             }
         });
 
-//        select('.new-bug-report-dialog > h3').addEventListener('mousedown', moveAt);
-//        dialog.addEventListener('mouseup', function (e) {
-//            document.onmouseup = null;
-//            dialog.onmouseup = null;
-//        });
-//
-//        function moveAt(e) {
-//            dialog.style.left = e.pageX - dialog.offsetWidth / 2 + 'px';
-//            dialog.style.top = e.pageY - dialog.offsetHeight / 2 + 'px';
-//            document.onmousemove = function (e) {
-//                moveAt(e);
-//            };
-//        }
     }
 
     function submitBug(ev) {
         ev.preventDefault();
 
         var ajax = new Ajax('post', document.location.href, {'Content-type': 'application/x-www-form-urlencoded'}),
+                data = '';
+
+        for (var i = 0; i < this.length; i++) {
+            var el = this[i];
+            if (el.type != 'submit' && el.type != 'button') {
+                data += el.name + '=' + el.value + (i == this.lenght - 1 ? '' : '&');
+            }
+        }
+
+        ajax.data = data;
+        ajax.success = function (data) {
+            var dbg = data;
+        };
+        ajax.failure = function (data) {
+            var dbg = data;
+        };
+
+        ajax.call();
+    }
+
+    function updateBug(ev) {
+        ev.preventDefault();
+
+        var ajax = new Ajax('put', document.location.href, {'Content-type': 'application/x-www-form-urlencoded'}),
                 data = '';
 
         for (var i = 0; i < this.length; i++) {
@@ -138,12 +185,9 @@
     }
 
     function addLabel() {
-        var labelsArea = this.parentNode.select('.labels-area'),
-                labelNameInput = this.parentNode.select('input[name=label-name]'),
+        var labelNameInput = this.parentNode.select('input[name=label-name]'),
                 colorPickerInput = this.parentNode.select('input[name=label-color]'),
                 addLabelBtn = this.parentNode.select('input[name=add-label]'),
-                labelDiv = document.createElement('div'),
-                labelRemoveBtn = document.createElement('span'),
                 labelsDataInput = this.parentNode.select('input[name=labels-data]'),
                 labelsData = [];
 
@@ -165,38 +209,48 @@
 
         labelsDataInput.value = JSON.stringify(labelsData);
 
-        renderLabel();
-        
+        renderLabel(this.parentNode);
+
         addLabelBtn.disabled = true;
         labelNameInput.value = '';
         labelNameInput.focus();
+    }
 
-        function renderLabel() {
-            labelDiv.className = 'bug-label';
+    function renderLabel(form, label) {
+        var labelDiv = document.createElement('div'),
+                labelRemoveBtn = document.createElement('span'),
+                labelsDataInput = form.select('input[name=labels-data]'),
+                labelsArea = form.select('.labels-area');
 
-            labelDiv.innerText = labelNameInput.value;
-            labelDiv.style.backgroundColor = colorPickerInput.value;
-
-            labelRemoveBtn.innerText = 'x';
-            labelRemoveBtn.className = 'bug-label-remove-btn';
-
-            labelRemoveBtn.addEventListener('click', function () {
-                var deleteIndex = -1, labels = JSON.parse(labelsDataInput.value), 
-                    labelName = this.parentNode.innerText.substring(0, this.parentNode.innerText.length - 1);
-                
-                for (var i = 0; i < labels.length; i++) {
-                    if (labels[i]['name'] == labelName) {
-                        deleteIndex = i;
-                    }
-                }
-                labels.splice(deleteIndex, 1);
-                labelsDataInput.value = JSON.stringify(labels);
-                this.parentNode.parentNode.removeChild(this.parentNode);
-            });
-
-            labelDiv.appendChild(labelRemoveBtn);
-            labelsArea.appendChild(labelDiv);
+        if (!label) {
+            var colorPickerInput = form.select('input[name=label-color]'),
+                    labelNameInput = form.select('input[name=label-name]');
         }
+
+        labelDiv.className = 'bug-label';
+
+        labelDiv.innerText = label ? label.name : labelNameInput.value;
+        labelDiv.style.backgroundColor = label ? label.color : colorPickerInput.value;
+
+        labelRemoveBtn.innerText = 'x';
+        labelRemoveBtn.className = 'bug-label-remove-btn';
+
+        labelRemoveBtn.addEventListener('click', function () {
+            var deleteIndex = -1, labels = JSON.parse(labelsDataInput.value),
+                    labelName = this.parentNode.innerText.substring(0, this.parentNode.innerText.length - 1);
+
+            for (var i = 0; i < labels.length; i++) {
+                if (labels[i]['name'] == labelName) {
+                    deleteIndex = i;
+                }
+            }
+            labels.splice(deleteIndex, 1);
+            labelsDataInput.value = JSON.stringify(labels);
+            this.parentNode.parentNode.removeChild(this.parentNode);
+        });
+
+        labelDiv.appendChild(labelRemoveBtn);
+        labelsArea.appendChild(labelDiv);
     }
 }());
 
