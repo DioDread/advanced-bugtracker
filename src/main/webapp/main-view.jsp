@@ -89,7 +89,13 @@
                             <p class="editable-control" control-type="select">
                                 <span class="detail-label">State: </span><span class="state data"></span>
                                 <select name="state" style="display: none;">
-                                    <option value="">Unspecified</option>
+                                    <option value="0">Reported</option>
+                                    <option value="1">Confirmed</option>
+                                    <option value="2">Open</option>
+                                    <option value="3">Not a Bug</option>
+                                    <option value="4">Fixed</option>
+                                    <option value="5">Closed</option>
+                                    <option value="6">Pending</option>
                                 </select>
                             </p>
                             <p class="editable-control" control-type="select">

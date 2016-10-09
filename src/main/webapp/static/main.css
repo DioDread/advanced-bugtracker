@@ -88,6 +88,9 @@ tr:nth-child(even){
     top: 200px;
     left: 636px;
     background-color: #d0e9ff;
+    -webkit-box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.39);
+    -moz-box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.39);
+    box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.39);
 }
 .new-bug-report-dialog-title {
     background-color: #2e57ea;
