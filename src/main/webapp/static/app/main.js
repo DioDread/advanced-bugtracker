@@ -35,8 +35,10 @@
     function fillBugReportDetails(report) {
         var bugReportTitleEl = select('.bug-report-title'),
                 dateReportedEl = select('.date-reported'),
+                editBugBtn = select('.edit-a-bug'),
                 dateResolvedEl = select('.date-resolved'),
                 dateUpdatedEl = select('.date-updated'),
+                desiredResolutionEl = select('.desired-resolution-date'),
                 reporterEl = select('.reporter'),
                 priorityEl = select('.priority'),
                 stateEl = select('.state'),
@@ -52,13 +54,16 @@
             labels = [];
         }
 
+        editBugBtn.style.display = 'inline';
+
         bugReportTitleEl.innerText = report.name;
         dateReportedEl.innerText = report.dateReported;
         dateResolvedEl.innerText = report.dateResolved;
         dateUpdatedEl.innerText = report.dateUpdated;
         reporterEl.innerText = report.reporter;
+        desiredResolutionEl.innerText = report.desiredResolutionDate;
         priorityEl.innerText = resolvePriority(report.priority);
-        stateEl.innerText = resolveStatus(report.state);
+        stateEl.innerText = resolveState(report.state);
         projectEl.innerText = report.project;
         descriptionEl.innerText = report.description;
 
@@ -70,27 +75,49 @@
     }
 
     function enableBugEditing() {
+        this.style.display = 'none';
+
         var editableContorls = updateBugForm.selectAll('.editable-control');
 
         editableContorls.forEach(function (el) {
-            var ctrlType = el.getAttribute('control-type');
-
-            if (ctrlType != 'colorpicker') {
+            var ctrlType = el.getAttribute('control-type'),
+                    data = el.select('.data');
+            if (el.select(ctrlType)) {
                 el.select(ctrlType).style.display = 'inline';
-                if (el.select('.data')) {
-                    el.select(ctrlType).value = el.select('.data').innerText;
-                }
-                el.select('.data').style.display = 'none';
-            } else {
-                el.style.display = 'inline';
+            }
+            switch (ctrlType) {
+                case 'colorpicker':
+                    el.style.display = 'inline';
+                    break;
+                case 'textarea':
+                case 'input':
+                    if (data) {
+                        el.select(ctrlType).value = el.select('.data').innerText;
+                        data.style.display = 'none';
+                    }
+                    if (el.selectAll('input').length > 1) {
+                        el.selectAll('input').forEach(function (el) {
+                            el.style.display = 'inline';
+                        });
+                    }
+                    break;
+                case 'select':
+                    data.style.display = 'none';
+                    setSelectOption(el.select('.data').innerText, el.select(ctrlType));
+                    break;
+                default:
             }
         });
+    }
+
+    function cancelBugEditing() {
+
     }
 
     function showNewBugDialog() {
         var dialog = select('.new-bug-report-dialog'),
                 closeBtn = select('.dialog-close-btn'),
-                addLabelBtn = dialog.select('input[name=add-label]'),
+                addLabelBtn = dialog.select('.add-label'),
                 labelName = dialog.select('input[name=label-name]');
 
         dialog.style.display = 'block';
@@ -187,7 +214,7 @@
     function addLabel() {
         var labelNameInput = this.parentNode.select('input[name=label-name]'),
                 colorPickerInput = this.parentNode.select('input[name=label-color]'),
-                addLabelBtn = this.parentNode.select('input[name=add-label]'),
+                addLabelBtn = this.parentNode.select('.add-label'),
                 labelsDataInput = this.parentNode.select('input[name=labels-data]'),
                 labelsData = [];
 

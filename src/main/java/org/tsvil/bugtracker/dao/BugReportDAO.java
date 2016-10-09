@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.ConfigurationException;
@@ -15,7 +14,6 @@ import javax.naming.NamingException;
 import org.tsvil.bugtracker.AppConfig;
 import org.tsvil.bugtracker.entity.BugReport;
 import org.tsvil.bugtracker.entity.BugReportBuilder;
-import org.tsvil.bugtracker.entity.Label;
 import org.tsvil.bugtracker.entity.State;
 import org.tsvil.bugtracker.utils.EntityUtils;
 import org.tsvil.bugtracker.utils.PageInfo;
@@ -56,8 +54,8 @@ public class BugReportDAO implements DBWriter {
     public void insertBugReport(BugReport br) throws SQLException, ConfigurationException {
         try {
             SimpleDateFormat sdtf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            SimpleDateFormat sdt = new java.text.SimpleDateFormat("yyyy-MM-dd");
-            String desiredResolutionDate = br.getDesiredResolutionDate() != null ? "'" + sdt.format(br.getDesiredResolutionDate()) + "'" : null;
+            SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+            String desiredResolutionDate = br.getDesiredResolutionDate() != null ? "'" + sdf.format(br.getDesiredResolutionDate()) + "'" : null;
             String dateResolved = br.getDateResolved() != null ? "'" + sdtf.format(br.getDateResolved()) + "'" : null;
             String dateUpdated = br.getDateUpdated() != null ? "'" + sdtf.format(br.getDateUpdated()) + "'" : null;
             String query = "insert into `" + AppConfig.getDbName() + "`.bug_report values(" + br.getBugReportId() + ", '"

@@ -2,8 +2,6 @@ package org.tsvil.bugtracker.entity;
 
 import java.util.Date;
 import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 
 public class BugReport {
@@ -208,6 +206,7 @@ public class BugReport {
                 .add("name", name)
                 .add("reporter", reporter)
                 .add("description", description)
+                .add("desiredResolutionDate", desiredResolutionDate != null ? desiredResolutionDate.toString() : "")
                 .add("dateReported", dateReported.toString())
                 .add("priority", priority.getValue())
                 .add("state", state.getValue())

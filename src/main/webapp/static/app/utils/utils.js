@@ -30,7 +30,7 @@ if (!HTMLElement.prototype.selectAll) {
     HTMLElement.prototype.selectAll = HTMLElement.prototype.querySelectorAll;
 }
 
-function resolvePriority(number) {
+function resolveState(number) {
     switch (number) {
         case 0:
             return 'Reported';
@@ -51,7 +51,7 @@ function resolvePriority(number) {
     }
 }
 
-function resolveStatus(number) {
+function resolvePriority(number) {
     switch (number) {
         case 0:
             return 'Unspecified';
@@ -67,5 +67,83 @@ function resolveStatus(number) {
             return 'Blocker';
         default:
             return 'Unspecified';
+    }
+}
+
+function setSelectOption(text, selectEl) {
+
+    switch (selectEl.name) {
+        case 'state':
+            setStateSelectOption(text, selectEl);
+            break;
+        case 'priority':
+            setPrioritySelectOption(text, selectEl);
+            break;
+    }
+
+
+    function setStateSelectOption(text, selectEl) {
+        if (!selectEl && selectEl.tagName != 'select') {
+            return;
+        }
+        switch (text) {
+            case 'Reported':
+                selectEl.selectedIndex = 0;
+                break;
+            case 'Confirmed':
+                selectEl.selectedIndex = 1;
+                break;
+            case 'Open':
+                selectEl.selectedIndex = 2;
+                break;
+            case 'Not a Bug':
+                selectEl.selectedIndex = 3;
+                break;
+            case 'Fixed':
+                selectEl.selectedIndex = 4;
+                break;
+            case 'Closed':
+                selectEl.selectedIndex = 5;
+                break;
+            case 'Pengidng':
+                selectEl.selectedIndex = 6;
+                break;
+            default:
+                selectEl.selectedIndex = 0;
+        }
+    }
+
+    function setPrioritySelectOption(text, selectEl) {
+        if (!selectEl && selectEl.tagName != 'select') {
+            return;
+        }
+        switch (text) {
+            case 'Unspecified':
+                selectEl.selectedIndex = 0;
+                break;
+            case 'Minor':
+                selectEl.selectedIndex = 1;
+                break;
+            case 'Medium':
+                selectEl.selectedIndex = 2;
+                break;
+            case 'Major':
+                selectEl.selectedIndex = 3;
+                break;
+            case 'Critical':
+                selectEl.selectedIndex = 4;
+                break;
+            case 'Blocker':
+                selectEl.selectedIndex = 5;
+                break;
+            default:
+                selectEl.selectedIndex = 0;
+        }
+    }
+}
+
+function setStateSelectOption(number, selectEl) {
+    if (selectEl && selectEl.tagName == 'select') {
+        selectEl.selectedIndex = number;
     }
 }

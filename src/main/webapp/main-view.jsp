@@ -6,8 +6,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
-        <link rel="stylesheet" href="<c:url value="/static/main.css"/>">
-        <link rel="icon" type="image/png" href="<c:url value="/static/favicon.png"/>" />
+        <link href="<c:url value="/static/res/font-awesome/css/font-awesome.css"/>" rel="stylesheet">
+        <link href="<c:url value="/static/res/main.css"/>" rel="stylesheet">
+        <link href="<c:url value="/static/favicon.png"/>" rel="icon" type="image/png">
         <title>Advanced Bugtracker</title>
     </head>
     <body>
@@ -56,10 +57,10 @@
             </div>
             <div class="main-panel">
                 <div class="reports-wrapper">
-                    <button class="btn-lg edit-a-bug">Edit Bug Report</button>
                     <form name="bug-report-details">
                         <span class="editable-control" control-type="input">
                             <h2 class="bug-report-title data">Bug details.</h2>
+                            <button class="btn-lg edit-a-bug" style="display: none;">Edit Bug Report</button>
                             <input type="text" name="name" class="title-input" placeholder="Enter subject" style="display: none;">
                         </span>
                         <h3>Details</h3>
@@ -73,7 +74,7 @@
                             </p>
                             <p class="editable-control" control-type="input">
                                 <span class="detail-label">Desired resolution date: </span><span class="desired-resolution-date data"></span>
-                                <input type="date" name="desiredResolutionDate" style="display: none;">
+                                <input type="text" placeholder="yyyy-MM-dd" title="Date in format yyyy-MM-dd" name="desiredResolutionDate" style="display: none;">
                             </p>
                             <p class="editable-control" control-type="select">
                                 <span class="detail-label">Priority: </span><span class="priority data"></span>
@@ -109,18 +110,18 @@
                         <div class="label-creator editable-control" control-type="colorpicker" style="display: none;">
                             <input type="text" name="label-name" placeholder="Input label name">
                             <input type="color" name="label-color" value="#07b3eb" title="Select Label Color">
-                            <input type="button" name="add-label" value="+" disabled>
+                            <i class="fa fa-plus add-label" aria-hidden="true" disabled></i>
                             <input type="hidden" name="labels-data" >
                         </div>
                         <div class="labels-area data"></div>
                         <h3>Description</h3>
                         <p class="editable-control" control-type="textarea">
                             <span class="bug-description data"></span>
-                            <textarea class="bug-description-edit" style="display: none;"></textarea>
+                            <textarea class="bug-description-edit dialog-bug-description" style="display: none;"></textarea>
                         </p>
-                        <h3>Comments</h3>
                         <p class="editable-control" control-type="input">
                             <input type="submit" class="btn-md update-a-bug" value="Update Bug Report" style="display: none;">
+                            <input type="button" class="btn-md cancel-update" value="Cancel" style="display: none;">
                         </p>
                     </form>
                 </div>
@@ -128,13 +129,13 @@
         </div>
 
         <div class="new-bug-report-dialog" draggable="true" style="display: none;">
-            <h3 class="new-bug-report-dialog-title">Report a Bug.<div class="dialog-close-btn">X</div></h3>
+            <h3 class="new-bug-report-dialog-title">Report a Bug.<i class="dialog-close-btn fa fa-times" aria-hidden="true"></i></h3>
             <div class="dialog-cont">
                 <form name="new-bug-report">
                     <label for="name">Title:</label>
                     <input type="text" name="name" placeholder="Enter subject">
                     <label for="desiredResolutionDate">Desired Resolution Date: </label>
-                    <input type="date" name="desiredResolutionDate">
+                    <input type="text" placeholder="yyyy-MM-dd" title="Date in format yyyy-MM-dd" name="desiredResolutionDate">
                     <label for="description">Describe your problem: </label>
                     <textarea name="description" class="dialog-bug-description"></textarea>
                     <label for="reporter">Your Name: </label>
@@ -143,11 +144,11 @@
                         <label class="labesl" for="label-name">Labels:</label>
                         <input type="text" name="label-name" placeholder="Input label name">
                         <input type="color" name="label-color" value="#07b3eb" title="Select Label Color">
-                        <input type="button" name="add-label" value="+" disabled>
+                        <i class="fa fa-plus add-label" aria-hidden="true" disabled></i>
                         <div class="labels-area"></div>
                         <input type="hidden" name="labels-data" >
                     </div>
-                    <label for="priority">Select Priority:</label>
+                    <label for="priority">Select Priority: </label>
                     <select name="priority">
                         <option value="0">Unspecified</option>
                         <option value="1">Minor</option>
@@ -156,7 +157,9 @@
                         <option value="4">Critical</option>
                         <option value="5">Blocker</option>
                     </select>
-                    <label for="project">Select Project:</label>
+                    <br>
+                    <br>
+                    <label for="project">Select Project: </label>
                     <select name="project">
                         <option value="">Unspecified</option>
                     </select>
@@ -165,6 +168,10 @@
                     </div>
                 </form>
             </div>
+        </div>
+
+        <div class="info-toast">
+
         </div>
 
         <script src="<c:url value="/static/app/utils/polyfill.js"/>"></script>

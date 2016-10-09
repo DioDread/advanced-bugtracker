@@ -1,17 +1,38 @@
-body {
+html, body {
     margin: 0;
     padding: 0;
-    height: 100vh;
+    height: 100%;
     overflow: hidden;
 }
 div, button {
     font-family: 'Ubuntu', sans-serif;
+}
+input {
+    padding: 2px 2px 2px 4px;
+    margin: 3px;
+}
+input[type=text], input[type=date], select {
+    height: 26px;  
+    font-size: 15px;
+    border: 1px solid #79a6ff;
+    background-color: #e5edff;
+}
+input[type=color] {
+    height: 26px;  
+    font-size: 15px;
+    border: 1px solid #79a6ff;
+    background-color: #e5edff;
+}
+textarea {
+    border: 1px solid #79a6ff;
+    background-color: #e5edff;
 }
 .header {
     width: 100%;
     padding-left: 35px;
     padding-top: 7px; 
     padding-bottom: 7px;
+    margin-bottom: 7px;
 }
 .header h1 {
     font-family: 'Roboto', sans-serif;
@@ -51,7 +72,8 @@ h3 {
     padding-bottom: 10px;
 }
 .main-panel {
-    height: 100%;
+    overflow: auto;
+    height: 88.2%;
     width: 70%;
     float: right;
     background-color: #eec4ff
@@ -84,13 +106,12 @@ tr:nth-child(even){
 .new-bug-report-dialog {
     position: absolute;
     width: 600px;
-    height: 480px;
     top: 200px;
     left: 636px;
     background-color: #d0e9ff;
-    -webkit-box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.39);
-    -moz-box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.39);
-    box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.39);
+    -webkit-box-shadow: 0px 0px 33px 1px rgba(0,0,0,0.72);
+    -moz-box-shadow: 0px 0px 33px 1px rgba(0,0,0,0.72);
+    box-shadow: 0px 0px 33px 1px rgba(0,0,0,0.72);
 }
 .new-bug-report-dialog-title {
     background-color: #2e57ea;
@@ -101,15 +122,30 @@ tr:nth-child(even){
 .dialog-cont {
     padding: 5px;
 }
+.dialog-cont input[name=label-color] {
+    position: relative;
+    top: 3px;
+    left: -5px;
+    width: 23px;
+}
+.bug-report-title {
+    display: inline-block;
+    margin-right: 10px;
+}
 .dialog-bug-description {
     margin: 0px;
     height: 200px;
     width: 585px;
-
 }
 .dialog-close-btn {
     float: right;
     cursor: pointer;
+    padding-top: 2px;
+    padding-right: 2px;
+}
+input[name=desiredResolutionDate] {    
+    width: 163.7px;
+    margin-right: 0;
 }
 .submit-a-bug-cont {
     text-align: center;
@@ -121,6 +157,14 @@ tr:nth-child(even){
 }
 .labels-area {
     height: 35px;
+}
+.add-label {
+    position: relative;
+    cursor: pointer;
+    top: 4px;
+    left: 4px;
+    color: #2249d6;
+    font-size: 1.5em;
 }
 .bug-label {
     display: inline-block;
@@ -146,5 +190,12 @@ tr:nth-child(even){
     margin-right: 6px;
 }
 .detail-label {
+    font-weight: bold;
+}
+input[type=text].title-input {
+    display: inline;
+    height: 55px;
+    padding-left: 10px;
+    font-size: 1.5em;
     font-weight: bold;
 }
