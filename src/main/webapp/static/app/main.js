@@ -1,29 +1,62 @@
 (function () {
     var recordTableRows = selectAll('.bug-report-record'),
-            updateBugForm = select('form[name=bug-report-details]'),
+            editBugForm = select('form[name=bug-report-details]'),
+            editBugBtn = select('.edit-a-bug'),
+            submitEditBugBtn = select('.update-a-bug'),
+            editCancelBtn = select('.cancel-update'),
             newBugForm = select('form[name=new-bug-report]'),
             newBugBtn = select('.report-a-bug'),
-            editBugBtn = select('.edit-a-bug');
+            bugsCountEl = select('.header-message'),
+            isEditingInProgress = false;
 
     recordTableRows.forEach(function (el) {
         el.addEventListener('click', handleBugRecordClick);
     });
 
     newBugForm.addEventListener('submit', submitBug);
-    updateBugForm.addEventListener('submit', updateBug);
+    editBugForm.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+    });
 
     newBugBtn.addEventListener('click', showNewBugDialog);
     editBugBtn.addEventListener('click', enableBugEditing);
+    submitEditBugBtn.addEventListener('click', updateBug);
+    editCancelBtn.addEventListener('click', cancelBugEditing);
 
     fetchProjects();
+    refreshBugCountMsg();
 
     // Module functions
 
     function handleBugRecordClick(evt) {
+        if (isEditingInProgress) {
+            return;
+        }
         var detailsHref = document.location.href + 'details?id=' + this.getAttribute('bug-id'),
                 ajax = new Ajax('get', detailsHref, {'Accept': 'application/json'});
 
         ajax.success = fillBugReportDetails;
+
+        ajax.failure = function (data) {
+            var dbg = data;
+        };
+
+        ajax.call();
+    }
+
+    function refreshBugCountMsg() {
+        if (isEditingInProgress) {
+            return;
+        }
+        var detailsHref = document.location.href + '?response=json',
+                ajax = new Ajax('get', detailsHref, {'Accept': 'application/json'});
+
+        ajax.success = function (data) {
+            var filtered = data.filter(function (el) {
+                return el.state != 4 || el.state != 5;
+            });
+            bugsCountEl.innerText = bugsCountEl.innerText.replace('{0}', filtered.length);
+        };
 
         ajax.failure = function (data) {
             var dbg = data;
@@ -77,7 +110,9 @@
     function enableBugEditing() {
         this.style.display = 'none';
 
-        var editableContorls = updateBugForm.selectAll('.editable-control');
+        isEditingInProgress = true;
+
+        var editableContorls = editBugForm.selectAll('.editable-control');
 
         editableContorls.forEach(function (el) {
             var ctrlType = el.getAttribute('control-type'),
@@ -111,7 +146,47 @@
     }
 
     function cancelBugEditing() {
+        isEditingInProgress = false;
 
+        editBugBtn.style.display = 'inline';
+
+        var editableContorls = editBugForm.selectAll('.editable-control');
+
+        editableContorls.forEach(function (el) {
+            var ctrlType = el.getAttribute('control-type'),
+                    ctrl = el.select(ctrlType),
+                    data = el.select('.data');
+            if (data) {
+                if (data instanceof HTMLHeadingElement) {
+                    data.style.display = 'inline';
+                } else {
+                    data.style.display = 'inline';
+                }
+            }
+            switch (ctrlType) {
+                case 'colorpicker':
+                    el.style.display = 'none';
+                    break;
+                case 'textarea':
+                case 'input':
+                    if (data) {
+                        data.innerText = ctrl.value;
+                        ctrl.style.display = 'none';
+                    }
+                    if (el.selectAll('input').length > 1) {
+                        el.selectAll('input').forEach(function (el) {
+                            el.style.display = 'none';
+                        });
+                    }
+                    break;
+                case 'select':
+                    data.style.display = 'inline';
+                    ctrl.style.display = 'none';
+                    data.innerText = ctrl[ctrl.selectedIndex].innerText;
+                    break;
+                default:
+            }
+        });
     }
 
     function showNewBugDialog() {
@@ -162,19 +237,19 @@
     }
 
     function updateBug(ev) {
-        ev.preventDefault();
-
-        var ajax = new Ajax('put', document.location.href, {'Content-type': 'application/x-www-form-urlencoded'}),
-                data = '';
-
-        for (var i = 0; i < this.length; i++) {
-            var el = this[i];
+        var data = '';
+        for (var i = 0; i < editBugForm.length; i++) {
+            var el = editBugForm[i];
+            if (el.name == 'label-name' || el.name == 'label-color')
+                continue;
             if (el.type != 'submit' && el.type != 'button') {
-                data += el.name + '=' + el.value + (i == this.lenght - 1 ? '' : '&');
+                data += el.name + '=' + el.value + (i < editBugForm.length - 2 ? '&' : '');
             }
         }
-
+        data = data.substr(0, data.length - 1);
+        var ajax = new Ajax('put', document.location.href + 'details', {'Content-Type': 'application/x-www-form-urlencoded'});
         ajax.data = data;
+
         ajax.success = function (data) {
             var dbg = data;
         };

@@ -205,7 +205,7 @@ public class BugReport {
                 .add("bugReportId", bugReportId)
                 .add("name", name)
                 .add("reporter", reporter)
-                .add("description", description)
+                .add("description", description != null ? description : "")
                 .add("desiredResolutionDate", desiredResolutionDate != null ? desiredResolutionDate.toString() : "")
                 .add("dateReported", dateReported.toString())
                 .add("priority", priority.getValue())

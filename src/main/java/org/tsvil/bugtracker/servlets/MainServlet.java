@@ -1,6 +1,7 @@
 package org.tsvil.bugtracker.servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.naming.ConfigurationException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -29,6 +31,10 @@ public class MainServlet extends HttpServlet {
 
         BugReportDAO bugReportDAO = new BugReportDAO();
         ArrayList<BugReport> reports = new ArrayList<>();
+        boolean isJson = false;
+        if (req.getParameter("response") != null) {
+            isJson = req.getParameter("response").equals("json");
+        }
 
         try {
             reports = bugReportDAO.getAllBugReports();
@@ -38,8 +44,21 @@ public class MainServlet extends HttpServlet {
             Logger.getLogger(MainServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        req.setAttribute("reports", reports);
-        req.getRequestDispatcher("/main-view.jsp").forward(req, resp);
+        if (isJson) {
+            String jsonResponse = "[";
+            int count = 0;
+            for (BugReport report : reports) {
+                count++;
+                jsonResponse += report.toJson().toString() + (reports.size() > count ? "," : "");
+            }
+            jsonResponse += "]";
+            resp.setStatus(200);
+            resp.setContentType("application/json");
+            resp.getWriter().write(jsonResponse);
+        } else {
+            req.setAttribute("reports", reports);
+            req.getRequestDispatcher("/main-view.jsp").forward(req, resp);
+        }
     }
 
     @Override

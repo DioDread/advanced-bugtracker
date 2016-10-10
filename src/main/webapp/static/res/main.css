@@ -81,7 +81,22 @@ h3 {
 .reports-wrapper {
     margin: 15px;
 }
-
+.details-section-header {
+    display: inline;
+    position: relative;
+    z-index: 30;
+    background-color: #eec4ff;
+    padding-right: 4px;
+}
+.border-bottom {
+    border-bottom: 1px solid grey;
+}
+.header-line {
+    border-top: 1px solid grey;
+    position: relative;
+    z-index: 10;
+    top: -12px;
+}
 .bugreports {
     border-collapse: collapse;
     width: 100%;
@@ -112,6 +127,7 @@ tr:nth-child(even){
     -webkit-box-shadow: 0px 0px 33px 1px rgba(0,0,0,0.72);
     -moz-box-shadow: 0px 0px 33px 1px rgba(0,0,0,0.72);
     box-shadow: 0px 0px 33px 1px rgba(0,0,0,0.72);
+    z-index: 40;
 }
 .new-bug-report-dialog-title {
     background-color: #2e57ea;
@@ -130,6 +146,7 @@ tr:nth-child(even){
 }
 .bug-report-title {
     display: inline-block;
+    margin-top: 0;
     margin-right: 10px;
 }
 .dialog-bug-description {
@@ -157,6 +174,7 @@ input[name=desiredResolutionDate] {
 }
 .labels-area {
     height: 35px;
+    padding-bottom: 7px;
 }
 .add-label {
     position: relative;

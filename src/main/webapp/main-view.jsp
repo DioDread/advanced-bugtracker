@@ -63,7 +63,10 @@
                             <button class="btn-lg edit-a-bug" style="display: none;">Edit Bug Report</button>
                             <input type="text" name="name" class="title-input" placeholder="Enter subject" style="display: none;">
                         </span>
-                        <h3>Details</h3>
+                        <div class="mod-header">
+                            <h3 class="details-section-header">Details</h3>
+                            <div class="header-line"></div>
+                        </div>
                         <div class="bug-details">
                             <p><span class="detail-label">Reported at: </span><span class="date-reported"></span></p>
                             <p><span class="detail-label">Resolution date: </span><span class="date-resolved"></span></p>
@@ -106,18 +109,24 @@
                                 </select>
                             </p>
                         </div>
-                        <h5>Labels:</h5>
-                        <div class="label-creator editable-control" control-type="colorpicker" style="display: none;">
+                        <div class="mod-header">
+                            <h3 class="details-section-header">Labels</h3>
+                            <div class="header-line"></div>
+                        </div>
+                        <div class="label-creator editable-control border-top" control-type="colorpicker" style="display: none;">
                             <input type="text" name="label-name" placeholder="Input label name">
                             <input type="color" name="label-color" value="#07b3eb" title="Select Label Color">
                             <i class="fa fa-plus add-label" aria-hidden="true" disabled></i>
                             <input type="hidden" name="labels-data" >
                         </div>
                         <div class="labels-area data"></div>
-                        <h3>Description</h3>
-                        <p class="editable-control" control-type="textarea">
+                        <div class="mod-header">
+                            <h3 class="details-section-header">Description</h3>
+                            <div class="header-line"></div>
+                        </div>
+                        <p class="editable-control border-top" control-type="textarea">
                             <span class="bug-description data"></span>
-                            <textarea class="bug-description-edit dialog-bug-description" style="display: none;"></textarea>
+                            <textarea name="description" class="bug-description-edit dialog-bug-description" style="display: none;"></textarea>
                         </p>
                         <p class="editable-control" control-type="input">
                             <input type="submit" class="btn-md update-a-bug" value="Update Bug Report" style="display: none;">
