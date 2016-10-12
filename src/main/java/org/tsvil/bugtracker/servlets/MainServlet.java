@@ -1,7 +1,6 @@
 package org.tsvil.bugtracker.servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,13 +44,9 @@ public class MainServlet extends HttpServlet {
         }
 
         if (isJson) {
-            String jsonResponse = "[";
-            int count = 0;
-            for (BugReport report : reports) {
-                count++;
-                jsonResponse += report.toJson().toString() + (reports.size() > count ? "," : "");
-            }
-            jsonResponse += "]";
+            String jsonResponse = reports.stream()
+                    .map(r -> r.toJson()).map(j -> j.toString())
+                    .collect(Collectors.joining(", ", "[", "]"));
             resp.setStatus(200);
             resp.setContentType("application/json");
             resp.getWriter().write(jsonResponse);

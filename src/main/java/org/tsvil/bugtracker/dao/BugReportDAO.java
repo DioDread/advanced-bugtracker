@@ -79,13 +79,18 @@ public class BugReportDAO implements DBWriter {
 
     public void updateBugReport(BugReport br) throws SQLException, ConfigurationException {
         try {
-            String query = "update `" + AppConfig.getDbName() + "`bug_report set bug_report_id=" + br.getBugReportId()
-                    + ", name=" + br.getName() + ", date_reported=" + br.getDateReported() + ", reporter="
-                    + br.getReporter() + ", description=" + br.getDescription() + ", desired_resolution_date="
-                    + br.getDesiredResolutionDate() + ", priority=" + br.getPriority().getValue() + ", state="
-                    + br.getState().getValue() + ", date_resolved=" + br.getDateResolved() + ", date_updated="
-                    + br.getDateUpdated() + ", project=" + br.getProject().getProjectId() + ", labels="
-                    + br.getLabels() + ";";
+            SimpleDateFormat sdtf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+            String desiredResolutionDate = br.getDesiredResolutionDate() != null ? "'" + sdf.format(br.getDesiredResolutionDate()) + "'" : null;
+            String dateResolved = br.getDateResolved() != null ? "'" + sdtf.format(br.getDateResolved()) + "'" : null;
+            String dateUpdated = br.getDateUpdated() != null ? "'" + sdtf.format(br.getDateUpdated()) + "'" : null;
+            String query = "update `" + AppConfig.getDbName() + "`.bug_report set bug_report_id=" + br.getBugReportId()
+                    + ", name='" + br.getName() + "', date_reported='" + br.getDateReported() + "', reporter='"
+                    + br.getReporter() + "', description='" + br.getDescription() + "', desired_resolution_date="
+                    + desiredResolutionDate + ", priority=" + br.getPriority().getValue() + ", state="
+                    + br.getState().getValue() + ", date_resolved=" + dateResolved + ", date_updated="
+                    + dateUpdated + ", project=" + br.getProject().getProjectId() + ", labels='"
+                    + br.getLabels() + "' where bug_report_id=" + br.getBugReportId() + ";" ;
             connection = dbc.getConnection();
             statement = connection.createStatement();
             statement.executeUpdate(query);

@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.naming.ConfigurationException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,11 +17,10 @@ import org.tsvil.bugtracker.dao.BugReportDAO;
 import org.tsvil.bugtracker.dao.ProjectDAO;
 import org.tsvil.bugtracker.entity.BugReport;
 import org.tsvil.bugtracker.entity.Project;
-import org.tsvil.bugtracker.entity.State;
 import org.tsvil.bugtracker.utils.EntityUtils;
 
 public class BugDetailsServlet extends HttpServlet {
-    
+
     private final EntityUtils entityUtils = new EntityUtils();
 
     @Override
@@ -51,29 +51,32 @@ public class BugDetailsServlet extends HttpServlet {
 
         SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
 
+        int id = Integer.parseInt(req.getParameter("bug-report-id"));
         String name = req.getParameter("name");
         String reporter = req.getParameter("reporter");
         String description = req.getParameter("description");
         String labels = req.getParameter("labels-data");
+        int projectId = Integer.parseInt(req.getParameter("project"));
+        int state = Integer.parseInt(req.getParameter("state"));
         int priority = Integer.parseInt(req.getParameter("priority"));
 
         try {
-            Project project = projectDAO.getProjectById(Integer.parseInt(req.getParameter("project")));
+            Project project = projectDAO.getProjectById(projectId);
             Date desiredResolutionDate = sdf.parse(req.getParameter("desiredResolutionDate"));
 
-            BugReport newReport = new BugReport(
-                    bugReportDAO.getLastId(),
-                    name,
-                    new Date(),
-                    reporter,
-                    entityUtils.resolvePriority(priority),
-                    State.REPORTED,
-                    project
-            );
-            newReport.setDesiredResolutionDate(desiredResolutionDate);
-            newReport.setDescription(description);
-            newReport.setLabels(labels);
-            bugReportDAO.insertBugReport(newReport);
+            BugReport existingReport = bugReportDAO.findBugReportById(id);
+            
+            existingReport.setName(name);
+            existingReport.setReporter(reporter);
+            existingReport.setDateUpdated(new Date());
+            existingReport.setDesiredResolutionDate(desiredResolutionDate);
+            existingReport.setDescription(description);
+            existingReport.setState(entityUtils.resolveState(state));
+            existingReport.setPriority(entityUtils.resolvePriority(priority));
+            existingReport.setLabels(labels);
+            existingReport.setProject(project);
+            
+            bugReportDAO.updateBugReport(existingReport);
         } catch (SQLException ex) {
             Logger.getLogger(MainServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ConfigurationException ex) {

@@ -8,12 +8,13 @@
         <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
         <link href="<c:url value="/static/res/font-awesome/css/font-awesome.css"/>" rel="stylesheet">
         <link href="<c:url value="/static/res/main.css"/>" rel="stylesheet">
+        <link href="<c:url value="/static/res/gradient-back.css"/>" rel="stylesheet">
         <link href="<c:url value="/static/favicon.png"/>" rel="icon" type="image/png">
         <title>Advanced Bugtracker</title>
     </head>
     <body>
         <div class="main-viewport">
-            <header class="header">
+            <header class="header grey-gradient-back">
                 <h1>Advanced Bugtracker:</h1>
                 <span class="header-message">Hello, today we have {0} unresolved bugs to do!</span>
                 <button class="btn-lg report-a-bug">Report a Bug</button>
@@ -42,7 +43,7 @@
                                 Reporter
                             </th>
                             <th>
-                                Date
+                                Date Reported
                             </th>
                         </tr>
                         <c:forEach items="${reports}" var="report">
@@ -68,6 +69,7 @@
                             <div class="header-line"></div>
                         </div>
                         <div class="bug-details">
+                            <input type="hidden" name="bug-report-id">
                             <p><span class="detail-label">Reported at: </span><span class="date-reported"></span></p>
                             <p><span class="detail-label">Resolution date: </span><span class="date-resolved"></span></p>
                             <p><span class="detail-label">Last updated at: </span><span class="date-updated"></span></p>
@@ -179,8 +181,13 @@
             </div>
         </div>
 
-        <div class="info-toast">
-
+        <div class="info-toast-success grey-gradient-back">
+            <i class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i>
+            <div class="msg-area"></div>
+        </div>
+        <div class="info-toast-failure grey-gradient-back">
+            <i class="fa fa-times fa-2x" aria-hidden="true"></i>
+            <div class="msg-area"></div>
         </div>
 
         <script src="<c:url value="/static/app/utils/polyfill.js"/>"></script>

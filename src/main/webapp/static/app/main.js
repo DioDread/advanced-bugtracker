@@ -53,7 +53,7 @@
 
         ajax.success = function (data) {
             var filtered = data.filter(function (el) {
-                return el.state != 4 || el.state != 5;
+                return el.state != 4 && el.state != 5;
             });
             bugsCountEl.innerText = bugsCountEl.innerText.replace('{0}', filtered.length);
         };
@@ -67,6 +67,7 @@
 
     function fillBugReportDetails(report) {
         var bugReportTitleEl = select('.bug-report-title'),
+                bugReportIdInput = editBugForm.select('input[name=bug-report-id]'),
                 dateReportedEl = select('.date-reported'),
                 editBugBtn = select('.edit-a-bug'),
                 dateResolvedEl = select('.date-resolved'),
@@ -77,8 +78,7 @@
                 stateEl = select('.state'),
                 projectEl = select('.project'),
                 descriptionEl = select('.bug-description'),
-                bugReportUpdForm = select('form[name=bug-report-details]'),
-                labelsInput = bugReportUpdForm.select('input[name=labels-data]'),
+                labelsInput = editBugForm.select('input[name=labels-data]'),
                 labels;
 
         try {
@@ -88,11 +88,13 @@
         }
 
         editBugBtn.style.display = 'inline';
-
+        
+        bugReportIdInput.value = report.bugReportId;
+        
         bugReportTitleEl.innerText = report.name;
         dateReportedEl.innerText = report.dateReported;
-        dateResolvedEl.innerText = report.dateResolved;
-        dateUpdatedEl.innerText = report.dateUpdated;
+        dateResolvedEl.innerText = report.dateResolved == '' ? 'not yet resolved' : report.dateResolved;
+        dateUpdatedEl.innerText = report.dateUpdated == '' ? 'never': report.dateUpdated;
         reporterEl.innerText = report.reporter;
         desiredResolutionEl.innerText = report.desiredResolutionDate;
         priorityEl.innerText = resolvePriority(report.priority);
@@ -101,9 +103,9 @@
         descriptionEl.innerText = report.description;
 
         labelsInput.value = report.labels;
-        bugReportUpdForm.select('.labels-area').innerHTML = '';
+        editBugForm.select('.labels-area').innerHTML = '';
         labels.forEach(function (el) {
-            renderLabel(bugReportUpdForm, el);
+            renderLabel(editBugForm, el);
         });
     }
 
@@ -226,35 +228,37 @@
         }
 
         ajax.data = data;
-        ajax.success = function (data) {
-            var dbg = data;
+        ajax.success = function () {
+            showToast(true, 'New bug report created successfully!');
+            select('.new-bug-report-dialog').style.display = 'none';
         };
-        ajax.failure = function (data) {
-            var dbg = data;
+        ajax.failure = function (err) {
+            console.log(err);
+            showToast(false, 'New bug report creation failure!');
         };
 
         ajax.call();
     }
 
     function updateBug(ev) {
-        var data = '';
+        var queryRecord = '';
         for (var i = 0; i < editBugForm.length; i++) {
             var el = editBugForm[i];
             if (el.name == 'label-name' || el.name == 'label-color')
                 continue;
             if (el.type != 'submit' && el.type != 'button') {
-                data += el.name + '=' + el.value + (i < editBugForm.length - 2 ? '&' : '');
+                queryRecord += el.name + '=' + el.value + (i < editBugForm.length - 2 ? '&' : '');
             }
         }
-        data = data.substr(0, data.length - 1);
-        var ajax = new Ajax('put', document.location.href + 'details', {'Content-Type': 'application/x-www-form-urlencoded'});
-        ajax.data = data;
+        queryRecord = queryRecord.substr(0, queryRecord.length - 1);
+        var ajax = new Ajax('put', document.location.href + 'details?' + encodeURIComponent(queryRecord));
 
         ajax.success = function (data) {
-            var dbg = data;
+            showToast(true, 'But report updated, sucessfully!');
+            cancelBugEditing();
         };
         ajax.failure = function (data) {
-            var dbg = data;
+            showToast(false, 'But report update error.');
         };
 
         ajax.call();

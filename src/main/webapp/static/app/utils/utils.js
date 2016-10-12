@@ -1,7 +1,7 @@
 /**
  * Safe quyerySelector shortcut
- * @param {type} selector - html element valid css selector
- * @returns {Element} - first element found by specific css selector
+ * @param {string} selector - html element valid css selector
+ * @returns {HTMLElement} - first element found by specific css selector
  */
 var select = function (selector) {
     if (selector && document.querySelector) {
@@ -30,6 +30,11 @@ if (!HTMLElement.prototype.selectAll) {
     HTMLElement.prototype.selectAll = HTMLElement.prototype.querySelectorAll;
 }
 
+/**
+ * Resolves State name from it's id;
+ * @param {number} number - State Id
+ * @returns {String} - State Name
+ */
 function resolveState(number) {
     switch (number) {
         case 0:
@@ -50,7 +55,11 @@ function resolveState(number) {
             return 'Open';
     }
 }
-
+/**
+ * Resolve Priority name from it's id;
+ * @param {number} number - Priority Id
+ * @returns {String} - Priority Name
+ */
 function resolvePriority(number) {
     switch (number) {
         case 0:
@@ -70,6 +79,11 @@ function resolvePriority(number) {
     }
 }
 
+/**
+ * Set select ements selected option based on its text name
+ * @param {String} text - element option to select name
+ * @param {HTMLSelectElement} selectEl - select element
+ */
 function setSelectOption(text, selectEl) {
 
     switch (selectEl.name) {
@@ -78,6 +92,9 @@ function setSelectOption(text, selectEl) {
             break;
         case 'priority':
             setPrioritySelectOption(text, selectEl);
+            break;
+        case 'project':
+            setProjectSelectOption(text, selectEl);
             break;
     }
 
@@ -140,10 +157,35 @@ function setSelectOption(text, selectEl) {
                 selectEl.selectedIndex = 0;
         }
     }
-}
 
-function setStateSelectOption(number, selectEl) {
-    if (selectEl && selectEl.tagName == 'select') {
-        selectEl.selectedIndex = number;
+    function setProjectSelectOption(text, selectEl) {
+        for (var i = 0; i < selectEl.length; i++) {
+            if (selectEl[i].innerText == text) {
+                selectEl.selectedIndex = i;
+            }
+        }
     }
+}
+/**
+ * Show popup message with success or failure message in right corner of screen
+ * @param {boolean} isSuccess - determine if toast will show success or failure message
+ * @param {string} message - message text
+ */
+function showToast(isSuccess, message) {
+    var toastElem = isSuccess ? select('.info-toast-success') : select('.info-toast-failure');
+
+    if (toastElem.classList.contains('fade-slow')) {
+        toastElem.classList.remove('fade-slow');
+    }
+    toastElem.classList.add('appear-slow');
+    toastElem.select('div').innerText = message;
+    toastElem.style.display = 'block';
+
+    toastElem.addEventListener('click', function (ev) {
+
+        if (toastElem.classList.contains('appear-slow')) {
+            toastElem.classList.remove('appear-slow');
+            toastElem.classList.add('fade');
+        }
+    });
 }
