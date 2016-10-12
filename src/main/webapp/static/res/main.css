@@ -216,7 +216,7 @@ input[type=text].title-input {
     font-size: 1.5em;
     font-weight: bold;
 }
-.info-toast-success {
+.info-toast {
     border: 2px solid #2e57ea;
     opacity: 0;
     position: fixed;
@@ -228,40 +228,29 @@ input[type=text].title-input {
     -moz-transition: opacity .3s ease-in-out;
     -webkit-transition: opacity .3s ease-in-out;
 }
-div.info-toast-success > i {
+.toast-success {
+}
+div.toast-success > i {
     color: green;
     padding-top: 24px;
     padding-left: 24px;
 }
-div.info-toast-success > div {
+div.toast-success > div {
     margin-top: -35px;
     padding: 1px 15px 0 68px;
 }
-.info-toast-failure {
-    border: 2px solid #2e57ea;
-    opacity: 0;
-    position: fixed;
-    width: 300px;
-    height: 80px;
-    right: 20px;
-    bottom: 20px;
-    transition: opacity .3s ease-in-out;
-    -moz-transition: opacity .3s ease-in-out;
-    -webkit-transition: opacity .3s ease-in-out;
+.toast-failure {
 }
-div.info-toast-failure > i {
+div.toast-failure > i {
     color: red;
     padding-top: 24px;
     padding-left: 24px;
 }
-div.info-toast-failure > div {
+div.toast-failure > div {
     margin-top: -35px;
     padding: 1px 15px 0 68px;
-
-}
-.fade-slow {
-    opacity: 0;
 }
 .appear-slow {
+    z-index: 55;
     opacity: 1;
 }

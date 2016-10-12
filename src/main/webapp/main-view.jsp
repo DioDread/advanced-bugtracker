@@ -181,11 +181,11 @@
             </div>
         </div>
 
-        <div class="info-toast-success grey-gradient-back">
+        <div class="info-toast toast-success grey-gradient-back">
             <i class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i>
             <div class="msg-area"></div>
         </div>
-        <div class="info-toast-failure grey-gradient-back">
+        <div class="info-toast toast-failure grey-gradient-back">
             <i class="fa fa-times fa-2x" aria-hidden="true"></i>
             <div class="msg-area"></div>
         </div>

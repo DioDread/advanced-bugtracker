@@ -217,7 +217,7 @@
     function submitBug(ev) {
         ev.preventDefault();
 
-        var ajax = new Ajax('post', document.location.href, {'Content-type': 'application/x-www-form-urlencoded'}),
+        var ajax = new Ajax('post', document.location.href, {'Content-Type': 'application/x-www-form-urlencoded'}),
                 data = '';
 
         for (var i = 0; i < this.length; i++) {
@@ -241,18 +241,18 @@
     }
 
     function updateBug(ev) {
-        var queryRecord = '';
+        var data = '';
         for (var i = 0; i < editBugForm.length; i++) {
             var el = editBugForm[i];
             if (el.name == 'label-name' || el.name == 'label-color')
                 continue;
             if (el.type != 'submit' && el.type != 'button') {
-                queryRecord += el.name + '=' + el.value + (i < editBugForm.length - 2 ? '&' : '');
+                data += el.name + '=' + el.value + (i < editBugForm.length - 2 ? '&' : '');
             }
         }
-        queryRecord = queryRecord.substr(0, queryRecord.length - 1);
-        var ajax = new Ajax('put', document.location.href + 'details?' + encodeURIComponent(queryRecord));
-
+        data = data.substr(0, data.length - 1);
+        var ajax = new Ajax('post', document.location.href + 'details', {'Content-Type': 'application/x-www-form-urlencoded'});
+        ajax.data = data;
         ajax.success = function (data) {
             showToast(true, 'But report updated, sucessfully!');
             cancelBugEditing();

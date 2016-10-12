@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 import javax.naming.ConfigurationException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -41,11 +40,6 @@ public class BugDetailsServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-
-    }
-
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
         BugReportDAO bugReportDAO = new BugReportDAO();
         ProjectDAO projectDAO = new ProjectDAO();
 
@@ -65,7 +59,7 @@ public class BugDetailsServlet extends HttpServlet {
             Date desiredResolutionDate = sdf.parse(req.getParameter("desiredResolutionDate"));
 
             BugReport existingReport = bugReportDAO.findBugReportById(id);
-            
+
             existingReport.setName(name);
             existingReport.setReporter(reporter);
             existingReport.setDateUpdated(new Date());
@@ -75,7 +69,7 @@ public class BugDetailsServlet extends HttpServlet {
             existingReport.setPriority(entityUtils.resolvePriority(priority));
             existingReport.setLabels(labels);
             existingReport.setProject(project);
-            
+
             bugReportDAO.updateBugReport(existingReport);
         } catch (SQLException ex) {
             Logger.getLogger(MainServlet.class.getName()).log(Level.SEVERE, null, ex);

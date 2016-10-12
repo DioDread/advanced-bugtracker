@@ -172,11 +172,11 @@ function setSelectOption(text, selectEl) {
  * @param {string} message - message text
  */
 function showToast(isSuccess, message) {
-    var toastElem = isSuccess ? select('.info-toast-success') : select('.info-toast-failure');
+    var toastElem = isSuccess ? select('.toast-success') : select('.toast-failure');
 
-    if (toastElem.classList.contains('fade-slow')) {
-        toastElem.classList.remove('fade-slow');
-    }
+//    if (toastElem.classList.contains('fade-slow')) {
+//        toastElem.classList.remove('fade-slow');
+//    }
     toastElem.classList.add('appear-slow');
     toastElem.select('div').innerText = message;
     toastElem.style.display = 'block';
@@ -185,7 +185,7 @@ function showToast(isSuccess, message) {
 
         if (toastElem.classList.contains('appear-slow')) {
             toastElem.classList.remove('appear-slow');
-            toastElem.classList.add('fade');
+//            toastElem.classList.add('fade-slow');
         }
     });
 }
