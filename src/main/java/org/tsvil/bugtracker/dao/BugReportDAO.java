@@ -156,12 +156,12 @@ public class BugReportDAO implements DBWriter {
     public int getLastId() throws SQLException, ConfigurationException {
         int result = -1;
         try {
-            String query = "select count(bug_report_id) as id_count from `" + AppConfig.getDbName() + "`.bug_report;";
+            String query = "select MAX(bug_report_id) as last_id from `" + AppConfig.getDbName() + "`.bug_report;";
             connection = dbc.getConnection();
             statement = connection.createStatement();
             ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
-                result = rs.getInt("id_count");
+                result = rs.getInt("last_id") + 1;
             }
         } catch (IOException ex) {
             Logger.getLogger(BugReportDAO.class.getName()).log(Level.SEVERE, null, ex);

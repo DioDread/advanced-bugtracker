@@ -1,6 +1,6 @@
 /**
  * Safe quyerySelector shortcut
- * @param {string} selector - html element valid css selector
+ * @param {String} selector - html element valid css selector
  * @returns {HTMLElement} - first element found by specific css selector
  */
 var select = function (selector) {
@@ -12,7 +12,7 @@ var select = function (selector) {
 
 /**
  * Safe quyerySelectorAll shortcut
- * @param {string} selector - html element valid css selector
+ * @param {String} selector - html element valid css selector
  * @returns {NodeList} - all elements by specific selector
  */
 var selectAll = function (selector) {
@@ -173,19 +173,38 @@ function setSelectOption(text, selectEl) {
  */
 function showToast(isSuccess, message) {
     var toastElem = isSuccess ? select('.toast-success') : select('.toast-failure');
+    
+    if (isSuccess) {
+        select('.toast-failure').classList.remove('appear-slow');
+    } else {
+        select('.toast-success').classList.remove('appear-slow');
+    }
 
-//    if (toastElem.classList.contains('fade-slow')) {
-//        toastElem.classList.remove('fade-slow');
-//    }
     toastElem.classList.add('appear-slow');
     toastElem.select('div').innerText = message;
-    toastElem.style.display = 'block';
 
     toastElem.addEventListener('click', function (ev) {
 
         if (toastElem.classList.contains('appear-slow')) {
             toastElem.classList.remove('appear-slow');
-//            toastElem.classList.add('fade-slow');
         }
     });
+    
+    setTimeout(function() {
+        toastElem.classList.remove('appear-slow');
+    }, 4000);
+}
+
+/**
+ * Convert valid hex color string (includes #) to rgb representing object.
+ * @param {String} hex color string for conversion
+ * @returns {Object} rgb repsentation of given hex color string
+ */
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
 }

@@ -26,7 +26,7 @@ public class MainServlet extends HttpServlet {
     private final EntityUtils entityUtils = new EntityUtils();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 
         BugReportDAO bugReportDAO = new BugReportDAO();
         ArrayList<BugReport> reports = new ArrayList<>();
@@ -38,12 +38,13 @@ public class MainServlet extends HttpServlet {
         try {
             reports = bugReportDAO.getAllBugReports();
         } catch (SQLException ex) {
+            handleSQLException(resp);
             Logger.getLogger(MainServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ConfigurationException ex) {
             Logger.getLogger(MainServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        if (isJson) {
+        if (isJson && reports != null) {
             String jsonResponse = reports.stream()
                     .map(r -> r.toJson()).map(j -> j.toString())
                     .collect(Collectors.joining(", ", "[", "]"));
@@ -57,7 +58,7 @@ public class MainServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         BugReportDAO bugReportDAO = new BugReportDAO();
         ProjectDAO projectDAO = new ProjectDAO();
@@ -88,6 +89,7 @@ public class MainServlet extends HttpServlet {
             newReport.setLabels(labels);
             bugReportDAO.insertBugReport(newReport);
         } catch (SQLException ex) {
+            handleSQLException(resp);
             Logger.getLogger(MainServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ConfigurationException ex) {
             Logger.getLogger(MainServlet.class.getName()).log(Level.SEVERE, null, ex);
@@ -95,5 +97,27 @@ public class MainServlet extends HttpServlet {
             Logger.getLogger(MainServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    @Override
+    public void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        BugReportDAO bugReportDAO = new BugReportDAO();
+        
+        int bugId = Integer.parseInt(req.getParameter("bug-report-id"));
+        
+        try {
+            bugReportDAO.deleteBugReport(bugId);
+        } catch (SQLException ex) {
+            Logger.getLogger(MainServlet.class.getName()).log(Level.SEVERE, null, ex);
+            handleSQLException(resp);
+        } catch (ConfigurationException ex) {
+            Logger.getLogger(MainServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void handleSQLException(HttpServletResponse resp) throws IOException {
+        resp.setStatus(500);
+        resp.setContentType("text/html");
+        resp.getWriter().write("Error during DB access.");
     }
 }

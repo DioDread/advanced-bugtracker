@@ -51,6 +51,7 @@
                                 <td><c:out value="${report.name}" /></td>
                                 <td><c:out value="${report.reporter}" /></td>
                                 <td><c:out value="${report.dateReported}" /></td>
+                                <td><i class="fa fa-times remove-bug-record"></i></td>
                             </tr>
                         </c:forEach>
                     </table>
@@ -139,7 +140,7 @@
             </div>
         </div>
 
-        <div class="new-bug-report-dialog" draggable="true" style="display: none;">
+        <div class="new-bug-report-dialog" style="display: none;">
             <h3 class="new-bug-report-dialog-title">Report a Bug.<i class="dialog-close-btn fa fa-times" aria-hidden="true"></i></h3>
             <div class="dialog-cont">
                 <form name="new-bug-report">
@@ -188,6 +189,17 @@
         <div class="info-toast toast-failure grey-gradient-back">
             <i class="fa fa-times fa-2x" aria-hidden="true"></i>
             <div class="msg-area"></div>
+        </div>
+
+        <div class="bug-deletion-confirm new-bug-report-dialog" style="display: none;">
+            <h3 class="new-bug-report-dialog-title">Delete Bug Record.<i class="dialog-close-btn fa fa-times" aria-hidden="true"></i></h3>
+            <div class="dialog-message">
+                Are you sure you want to delete this bug record?
+            </div>
+            <div class="dialog-buttons">
+                <button class="delete-yes btn-md">Yes</button>
+                <button class="delete-no btn-md">No</button>
+            </div>
         </div>
 
         <script src="<c:url value="/static/app/utils/polyfill.js"/>"></script>

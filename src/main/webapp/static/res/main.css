@@ -137,7 +137,7 @@ tr:nth-child(even){
 .dialog-cont {
     padding: 5px;
 }
-.dialog-cont input[name=label-color] {
+.label-creator input[name=label-color] {
     position: relative;
     top: 3px;
     left: -5px;
@@ -185,26 +185,19 @@ input[name=desiredResolutionDate] {
 }
 .bug-label {
     display: inline-block;
+    height: 21px;
     font-size: 13px;
     font-style: italic;
     border-radius: 7px;
-    padding-top: 3px;
-    padding-left: 6px;
-    padding-bottom: 4px;
+    padding: 10px 10px 6px 8px;
     margin: 4px;
 }
 .bug-label-remove-btn {
-    display: inline-block;
-    font-size: 16px;
-    font-weight: bold;
+    float: right;
+    font-size: 18px;
     font-style: normal;
-    border: 2px solid gray;
-    border-radius: 12px;
-    padding-right: 7px;
-    padding-bottom: 3px;
     padding-left: 8px;
     margin-left: 7px;
-    margin-right: 6px;
 }
 .detail-label {
     font-weight: bold;
@@ -253,4 +246,11 @@ div.toast-failure > div {
 .appear-slow {
     z-index: 55;
     opacity: 1;
+}
+.dialog-message {
+    padding: 10px;
+}
+.dialog-buttons {
+    text-align: center;
+    padding-bottom: 10px;
 }

@@ -7,7 +7,7 @@
             newBugForm = select('form[name=new-bug-report]'),
             newBugBtn = select('.report-a-bug'),
             bugsCountEl = select('.header-message'),
-            isEditingInProgress = false;
+            isEditingInProgress = false, isCreationInProgress = false;
 
     recordTableRows.forEach(function (el) {
         el.addEventListener('click', handleBugRecordClick);
@@ -26,6 +26,10 @@
     fetchProjects();
     refreshBugCountMsg();
 
+    select('.bugreports').selectAll('.remove-bug-record').forEach(function (btn) {
+        btn.addEventListener('click', deleteBugRecord);
+    });
+
     // Module functions
 
     function handleBugRecordClick(evt) {
@@ -36,12 +40,46 @@
                 ajax = new Ajax('get', detailsHref, {'Accept': 'application/json'});
 
         ajax.success = fillBugReportDetails;
-
-        ajax.failure = function (data) {
-            var dbg = data;
-        };
+        ajax.failure = defaultErrorHandler;
 
         ajax.call();
+    }
+
+    function deleteBugRecord(evt) {
+        evt.bubbles = false;
+        evt.stopPropagation();
+
+        var bugId = this.parentNode.parentNode.getAttribute('bug-id'),
+                deleteBugRequest = new Ajax('delete', document.location.href + '?bug-report-id=' + bugId),
+                bugDeletionConfirm = select('.bug-deletion-confirm'),
+                closeBtn = bugDeletionConfirm.select('.dialog-close-btn'),
+                deleteYes = bugDeletionConfirm.select('.delete-yes'),
+                deleteNo = bugDeletionConfirm.select('.delete-no');
+
+        bugDeletionConfirm.style.display = 'block';
+
+        deleteYes.addEventListener('click', function () {
+            deleteBugRequest.success = function (data) {
+                var debug = data;
+                showToast(true, 'Bug record deleted sucessfully.');
+                refreshPageState();
+                closeDialog();
+            };
+
+            deleteBugRequest.failure = function (err) {
+                showToast(false, 'Some error occured during bug record deletion process.');
+                console.error(err);
+            };
+
+            deleteBugRequest.call();
+        });
+
+        deleteNo.addEventListener('click', closeDialog);
+        closeBtn.addEventListener('click', closeDialog);
+
+        function closeDialog() {
+            bugDeletionConfirm.style.display = 'none';
+        }
     }
 
     function refreshBugCountMsg() {
@@ -49,20 +87,61 @@
             return;
         }
         var detailsHref = document.location.href + '?response=json',
-                ajax = new Ajax('get', detailsHref, {'Accept': 'application/json'});
+                getBugReportsList = new Ajax('get', detailsHref, {'Accept': 'application/json'});
 
-        ajax.success = function (data) {
+        getBugReportsList.success = function (data) {
             var filtered = data.filter(function (el) {
                 return el.state != 4 && el.state != 5;
             });
             bugsCountEl.innerText = bugsCountEl.innerText.replace('{0}', filtered.length);
         };
 
-        ajax.failure = function (data) {
-            var dbg = data;
+        getBugReportsList.failure = defaultErrorHandler;
+        getBugReportsList.call();
+    }
+
+    function refreshBugsList() {
+        var table = select('.bugreports'),
+                requestBugsList = new Ajax('get', document.location.href + '?response=json', {'Accept': 'application/json'});
+
+        requestBugsList.success = function (data) {
+            var row, col;
+            
+            for (var i = table.rows.length - 1; i > 0; i--) {
+                table.deleteRow(i);
+            }
+
+            for (var i = 0; i < data.length; i++) {
+                var record = data[i];
+                row = table.insertRow(i + 1);
+                row.setAttribute('bug-id', record.bugReportId);
+
+                col = document.createElement('td');
+                col.innerText = record.name;
+                row.appendChild(col);
+
+                col = document.createElement('td');
+                col.innerText = record.reporter;
+                row.appendChild(col);
+
+                col = document.createElement('td');
+                col.innerText = record.dateReported;
+                row.appendChild(col);
+
+                col = document.createElement('td');
+                btn = document.createElement('i');
+                btn.className = 'fa fa-times remove-bug-record';
+                btn.addEventListener('click', deleteBugRecord);
+                col.appendChild(btn);
+
+                row.addEventListener('click', handleBugRecordClick);
+                row.appendChild(col);
+            }
         };
 
-        ajax.call();
+        requestBugsList.failure = defaultErrorHandler;
+
+        requestBugsList.call();
     }
 
     function fillBugReportDetails(report) {
@@ -88,13 +167,13 @@
         }
 
         editBugBtn.style.display = 'inline';
-        
+
         bugReportIdInput.value = report.bugReportId;
-        
+
         bugReportTitleEl.innerText = report.name;
         dateReportedEl.innerText = report.dateReported;
         dateResolvedEl.innerText = report.dateResolved == '' ? 'not yet resolved' : report.dateResolved;
-        dateUpdatedEl.innerText = report.dateUpdated == '' ? 'never': report.dateUpdated;
+        dateUpdatedEl.innerText = report.dateUpdated == '' ? 'never' : report.dateUpdated;
         reporterEl.innerText = report.reporter;
         desiredResolutionEl.innerText = report.desiredResolutionDate;
         priorityEl.innerText = resolvePriority(report.priority);
@@ -125,6 +204,11 @@
             switch (ctrlType) {
                 case 'colorpicker':
                     el.style.display = 'inline';
+                    el.select('.add-label').addEventListener('click', addLabel);
+                    editBugForm.select('.labels-area').selectAll('i').forEach(function (btn) {
+                        btn.style.display = 'block';
+                        btn.style.marginRight = 0;
+                    });
                     break;
                 case 'textarea':
                 case 'input':
@@ -168,6 +252,10 @@
             switch (ctrlType) {
                 case 'colorpicker':
                     el.style.display = 'none';
+                    editBugForm.select('.labels-area').selectAll('i').forEach(function (btn) {
+                        btn.style.display = 'none';
+                        btn.style.marginRight = 0;
+                    });
                     break;
                 case 'textarea':
                 case 'input':
@@ -192,6 +280,8 @@
     }
 
     function showNewBugDialog() {
+        isCreationInProgress = true;
+
         var dialog = select('.new-bug-report-dialog'),
                 closeBtn = select('.dialog-close-btn'),
                 addLabelBtn = dialog.select('.add-label'),
@@ -201,6 +291,7 @@
 
         closeBtn.addEventListener('click', function () {
             dialog.style.display = 'none';
+            isCreationInProgress = false;
         });
 
         addLabelBtn.addEventListener('click', addLabel);
@@ -231,6 +322,8 @@
         ajax.success = function () {
             showToast(true, 'New bug report created successfully!');
             select('.new-bug-report-dialog').style.display = 'none';
+            isCreationInProgress = false;
+            refreshPageState();
         };
         ajax.failure = function (err) {
             console.log(err);
@@ -253,11 +346,12 @@
         data = data.substr(0, data.length - 1);
         var ajax = new Ajax('post', document.location.href + 'details', {'Content-Type': 'application/x-www-form-urlencoded'});
         ajax.data = data;
-        ajax.success = function (data) {
+        ajax.success = function () {
             showToast(true, 'But report updated, sucessfully!');
             cancelBugEditing();
+            refreshPageState();
         };
-        ajax.failure = function (data) {
+        ajax.failure = function () {
             showToast(false, 'But report update error.');
         };
 
@@ -275,8 +369,7 @@
                 fillSelect(el);
             });
         };
-        ajax.failure = function (data) {
-        };
+        ajax.failure = defaultErrorHandler;
 
         function fillSelect(selectEl) {
             for (var i = 0; i < projects.length; i++) {
@@ -314,8 +407,11 @@
         });
 
         labelsDataInput.value = JSON.stringify(labelsData);
-
-        renderLabel(this.parentNode);
+        if (isEditingInProgress) {
+            renderLabel(this.parentNode.parentNode);
+        } else {
+            renderLabel(this.parentNode);
+        }
 
         addLabelBtn.disabled = true;
         labelNameInput.value = '';
@@ -324,7 +420,7 @@
 
     function renderLabel(form, label) {
         var labelDiv = document.createElement('div'),
-                labelRemoveBtn = document.createElement('span'),
+                labelRemoveBtn = document.createElement('i'),
                 labelsDataInput = form.select('input[name=labels-data]'),
                 labelsArea = form.select('.labels-area');
 
@@ -337,9 +433,21 @@
 
         labelDiv.innerText = label ? label.name : labelNameInput.value;
         labelDiv.style.backgroundColor = label ? label.color : colorPickerInput.value;
+        
+        var rgb = hexToRgb(label ? label.color : colorPickerInput.value);
+        var contrast = Math.round(((parseInt(rgb.r) * 299) + (parseInt(rgb.g) * 587) + (parseInt(rgb.b) * 114)) /1000);
+        
+        if (contrast > 125) {
+            labelDiv.style.color = 'black';
+        } else {
+            labelDiv.style.color = 'white';
+        }
 
-        labelRemoveBtn.innerText = 'x';
-        labelRemoveBtn.className = 'bug-label-remove-btn';
+        labelRemoveBtn.className += 'fa fa-times-circle bug-label-remove-btn';
+
+        if (!isEditingInProgress && !isCreationInProgress) {
+            labelRemoveBtn.style.display = 'none';
+        }
 
         labelRemoveBtn.addEventListener('click', function () {
             var deleteIndex = -1, labels = JSON.parse(labelsDataInput.value),
@@ -357,6 +465,15 @@
 
         labelDiv.appendChild(labelRemoveBtn);
         labelsArea.appendChild(labelDiv);
+    }
+
+    function defaultErrorHandler() {
+        showToast(false, 'Some error occured, please contact administrator.');
+    }
+    
+    function refreshPageState() {
+        refreshBugCountMsg();
+        refreshBugsList();
     }
 }());
 
