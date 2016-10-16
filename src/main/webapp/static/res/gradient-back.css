@@ -1,4 +1,4 @@
-.grey-gradient-back {
+.gradient-back {
     background: rgba(122,167,255,1);
     background: -moz-linear-gradient(left, rgba(122,167,255,1) 0%, rgba(122,167,255,1) 15%, rgba(238,196,255,1) 47%, rgba(238,194,255,1) 100%);
     background: -webkit-gradient(left top, right top, color-stop(0%, rgba(122,167,255,1)), color-stop(15%, rgba(122,167,255,1)), color-stop(47%, rgba(238,196,255,1)), color-stop(100%, rgba(238,194,255,1)));

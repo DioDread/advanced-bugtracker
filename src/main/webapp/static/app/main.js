@@ -7,6 +7,7 @@
             newBugForm = select('form[name=new-bug-report]'),
             newBugBtn = select('.report-a-bug'),
             bugsCountEl = select('.header-message'),
+            acceptJson = {'Accept': 'application/json'},
             isEditingInProgress = false, isCreationInProgress = false;
 
     recordTableRows.forEach(function (el) {
@@ -37,7 +38,7 @@
             return;
         }
         var detailsHref = document.location.href + 'details?id=' + this.getAttribute('bug-id'),
-                ajax = new Ajax('get', detailsHref, {'Accept': 'application/json'});
+                ajax = new Ajax('get', detailsHref, acceptJson);
 
         ajax.success = fillBugReportDetails;
         ajax.failure = defaultErrorHandler;
@@ -87,7 +88,7 @@
             return;
         }
         var detailsHref = document.location.href + '?response=json',
-                getBugReportsList = new Ajax('get', detailsHref, {'Accept': 'application/json'});
+                getBugReportsList = new Ajax('get', detailsHref, acceptJson);
 
         getBugReportsList.success = function (data) {
             var filtered = data.filter(function (el) {
@@ -102,7 +103,7 @@
 
     function refreshBugsList() {
         var table = select('.bugreports'),
-                requestBugsList = new Ajax('get', document.location.href + '?response=json', {'Accept': 'application/json'});
+                requestBugsList = new Ajax('get', document.location.href + '?response=json', acceptJson);
 
         requestBugsList.success = function (data) {
             var row, col;
@@ -361,7 +362,7 @@
     function fetchProjects() {
         var projectSelects = selectAll('select[name=project]'),
                 projects = [],
-                ajax = new Ajax('get', document.location.href + 'project', {'Accept': 'application/json'});
+                ajax = new Ajax('get', document.location.href + 'project', acceptJson);
 
         ajax.success = function (data) {
             projects = data;

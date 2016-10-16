@@ -9,12 +9,13 @@
         <link href="<c:url value="/static/res/font-awesome/css/font-awesome.css"/>" rel="stylesheet">
         <link href="<c:url value="/static/res/main.css"/>" rel="stylesheet">
         <link href="<c:url value="/static/res/gradient-back.css"/>" rel="stylesheet">
+        <link href="<c:url value="/static/res/statistics.css"/>" rel="stylesheet">
         <link href="<c:url value="/static/favicon.png"/>" rel="icon" type="image/png">
         <title>Advanced Bugtracker</title>
     </head>
     <body>
         <div class="main-viewport">
-            <header class="header grey-gradient-back">
+            <header class="header gradient-back">
                 <h1>Advanced Bugtracker:</h1>
                 <span class="header-message">Hello, today we have {0} unresolved bugs to do!</span>
                 <button class="btn-lg report-a-bug">Report a Bug</button>
@@ -182,11 +183,11 @@
             </div>
         </div>
 
-        <div class="info-toast toast-success grey-gradient-back">
+        <div class="info-toast toast-success gradient-back">
             <i class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i>
             <div class="msg-area"></div>
         </div>
-        <div class="info-toast toast-failure grey-gradient-back">
+        <div class="info-toast toast-failure gradient-back">
             <i class="fa fa-times fa-2x" aria-hidden="true"></i>
             <div class="msg-area"></div>
         </div>
@@ -206,5 +207,6 @@
         <script src="<c:url value="/static/app/utils/utils.js"/>"></script>
         <script src="<c:url value="/static/app/utils/ajax.js"/>"></script>
         <script src="<c:url value="/static/app/main.js"/>"></script>
+        <script src="<c:url value="/static/app/statistics.js"/>"></script>
     </body>
 </html>
