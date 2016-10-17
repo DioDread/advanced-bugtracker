@@ -7,7 +7,7 @@
             closeBtn = document.createElement('i'),
             currentHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0),
             currentWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
-            isAlreadyRendered = false, bugsByDays = [];
+            bugsByDays = [];
 
     container.className = 'statistics-cont gradient-back';
     container.style.display = 'none';
@@ -25,9 +25,6 @@
     var w = viewPort.width = Math.round(currentWidth * .85);
     var h = viewPort.height = Math.round(currentHeight * .65);
 
-    context.fillStyle = '#FFF';
-    context.fillRect(0, 0, viewPort.width, viewPort.height);
-
     statisticsBtn.addEventListener('click', showStatistics);
 
     container.appendChild(viewPort);
@@ -36,27 +33,26 @@
     function showStatistics() {
         var statisticsRequest = new Ajax('get', document.location.href + 'statistics', {'Accept': 'application/json'});
 
-        statisticsRequest.success = drawStatisticChart;
+        statisticsRequest.success = showStatisticsDialog;
         statisticsRequest.failure = function (err) {
             console.error(err);
         };
         statisticsRequest.call();
     }
 
-    function drawStatisticChart(data) {
-        if (!isAlreadyRendered) {
-            drawAxis();
-        }
+    function showStatisticsDialog(data) {
+        context.fillStyle = '#FFF';
+        context.fillRect(0, 0, viewPort.width, viewPort.height);
+        drawAxis();
         container.style.display = 'block';
         initChartData(data);
         drawChart();
-        isAlreadyRendered = true;
     }
 
     function drawAxis() {
         context.lineWidth = 2;
-        context.fillStyle = '#000000';
         context.beginPath();
+        context.strokeStyle = '#000000';
         context.moveTo(40, h - 40);
         context.lineTo(40, 40);
         context.lineTo(34, 46);
@@ -88,9 +84,8 @@
 
     function drawChart() {
         var xAxisGrade = [], yAxisGrade = [];
-        
+
         fillAxisScales(xAxisGrade, yAxisGrade);
-        clearLegend();
 
         context.lineWidth = 8;
         context.lineJoin = context.lineCap = 'round';
@@ -118,8 +113,8 @@
         var xSectionLength = Math.round((w - 80) / datesCount()),
                 ySectionLength = Math.round((h - 80) / maxBugsCount()),
                 dates = Object.keys(bugsByDays).map(function (date) {
-                    return (new Date(date)).getTime();
-                }),
+            return (new Date(date)).getTime();
+        }),
                 minDate = Math.min.apply(null, dates) - 86400000;
 
         yAxisGrade[0] = h - 40;
@@ -134,20 +129,6 @@
             nextDay += 86400000;
             step += xSectionLength;
             nextDate = dateToFormat(nextDay);
-        }
-    }
-
-    function clearLegend() {
-        if (isAlreadyRendered) {
-            context.fillStyle = '#FFF';
-            context.fillRect(0, 0, 34, h);
-            context.fillRect(h - 37, 0, w, 37);
-            context.save();
-            context.font = '18px arial';
-            context.fillStyle = '#2e57ea';
-            context.rotate(-(Math.PI / 180) * 90);
-            context.fillText('Bugs Count', -150, 30);
-            context.restore();
         }
     }
 
