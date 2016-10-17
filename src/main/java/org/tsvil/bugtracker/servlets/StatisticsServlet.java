@@ -21,7 +21,7 @@ public class StatisticsServlet extends HttpServlet {
 
         try {
             String statsJson = brDAO.getAllBugReports().stream()
-                    .filter(r -> r.getState() != State.CLOSED && r.getState() != State.FIXED)
+//                    .filter(r -> r.getState() != State.CLOSED && r.getState() != State.FIXED)
                     .map(r -> Json.createObjectBuilder().add(r.getDateReported().toString(), r.getName()).build().toString())
                     .collect(Collectors.joining(",", "[", "]"));
             resp.setStatus(200);
