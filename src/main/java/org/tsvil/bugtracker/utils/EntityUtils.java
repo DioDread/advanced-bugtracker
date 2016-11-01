@@ -2,6 +2,7 @@ package org.tsvil.bugtracker.utils;
 
 import javax.json.Json;
 import javax.json.JsonObject;
+import org.tsvil.bugtracker.entity.Credentials;
 import org.tsvil.bugtracker.entity.Label;
 import org.tsvil.bugtracker.entity.Priority;
 import org.tsvil.bugtracker.entity.State;
@@ -50,5 +51,9 @@ public class EntityUtils {
     
     public JsonObject createLabelsJson(Label[] labels) {
         return Json.createObjectBuilder().build();
+    }
+    
+    public Credentials credsFromCookies() {
+        return new Credentials("", "");
     }
 }

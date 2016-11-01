@@ -1,0 +1,59 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+div, button, input {
+    font-family: 'Ubuntu', sans-serif;
+}
+.title-bar {
+    margin-top: 250px;
+    margin-bottom: 35px;
+    text-align: center;
+}
+.header {
+    font-family: 'Roboto', sans-serif;
+    font-size: 50px;
+    font-weight: bold;
+}
+.login-form-cont {
+    width: 45%;
+    margin: auto;
+    font-size: 35px;
+}
+.login-block.right {
+    width: 63%;
+    float: right;
+}
+.login-block.left {
+    width: 35%;
+    float: left;
+    text-align: right;
+}
+.login-block label {
+    display: block;
+    line-height: 60px;
+}
+.login-block input {
+    padding-left: 3px;
+    font-size: 20px;
+    height: 34px;
+    width: 280px;
+}
+.login-block input[type=text] {
+    margin-top: 12px;
+    margin-bottom: 11px;
+}
+.login-block input[type=password] {
+    margin-bottom: 22px;
+}
+.login-control {
+    clear: both;
+    text-align: center;
+}
+.login-control input {
+    font-size: 20px;
+    height: 34px;
+    width: 96px
+} 
