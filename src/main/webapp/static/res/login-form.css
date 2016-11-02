@@ -7,9 +7,13 @@ html, body {
 div, button, input {
     font-family: 'Ubuntu', sans-serif;
 }
+input[type=text], input[type=password] {
+    border: 1px solid #79a6ff;
+    background-color: #e5edff;
+}
 .title-bar {
-    margin-top: 250px;
-    margin-bottom: 35px;
+    margin-top: 190px;
+    margin-bottom: 85px;
     text-align: center;
 }
 .header {
@@ -36,14 +40,14 @@ div, button, input {
     line-height: 60px;
 }
 .login-block input {
-    padding-left: 3px;
+    padding-left: 8px;
     font-size: 20px;
     height: 34px;
     width: 280px;
 }
 .login-block input[type=text] {
-    margin-top: 12px;
-    margin-bottom: 11px;
+    margin-top: 14px;
+    margin-bottom: 14px;
 }
 .login-block input[type=password] {
     margin-bottom: 22px;
@@ -56,4 +60,51 @@ div, button, input {
     font-size: 20px;
     height: 34px;
     width: 96px
-} 
+}
+.hide {
+    display: none;
+}
+.header-bar {
+    margin-top: 35px;
+    margin-bottom: 55px;
+}
+.sub-header {
+    font-family: 'Roboto', sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+    padding-left: 40%;
+}
+.register-form-cont {
+    width: 55%;
+    font-size: 28px;
+}
+.register-form-cont input[type=password] {
+    margin-top: 23.5px;
+}
+.register-block {
+    float: right;
+    width: 62%;
+}
+.register-block input[type=text] {
+    width: 350px;
+    height: 32px;
+    font-size: 18px;
+    padding-left: 8px;
+    margin-top: 14px;
+}
+.register-block input[type=password] {
+    width: 350px;
+    height: 32px;
+    font-size: 18px;
+    padding-left: 8px;
+    margin-top: 14px;
+}
+.register-btn-group {
+    padding-top: 15px;
+}
+.register-btn-group input[type=button] {
+    width: 95px;
+    height: 35px;
+    font-size: 20px;
+    margin-right: 10px;
+}
