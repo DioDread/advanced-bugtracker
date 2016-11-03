@@ -18,6 +18,8 @@ public class BugReport {
     private Date dateUpdated;
     private Project project;
     private String labels;
+    private User assignedUser;
+    private User reportedUser;
 
     public BugReport() {
     }
@@ -200,6 +202,34 @@ public class BugReport {
         this.name = name;
     }
 
+    /**
+     * @return the assignedUser
+     */
+    public User getAssignedUser() {
+        return assignedUser;
+    }
+
+    /**
+     * @param assignedUser the assignedUser to set
+     */
+    public void setAssignedUser(User assignedUser) {
+        this.assignedUser = assignedUser;
+    }
+
+    /**
+     * @return the reportedUser
+     */
+    public User getReportedUser() {
+        return reportedUser;
+    }
+
+    /**
+     * @param reportedUser the reportedUser to set
+     */
+    public void setReportedUser(User reportedUser) {
+        this.reportedUser = reportedUser;
+    }
+
     public JsonObject toJson() {
         return Json.createObjectBuilder()
                 .add("bugReportId", bugReportId)
@@ -216,4 +246,5 @@ public class BugReport {
                 .add("project", project != null ? project.getName() : "")
                 .build();
     }
+
 }

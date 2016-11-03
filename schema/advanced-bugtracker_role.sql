@@ -18,28 +18,28 @@ USE `advanced-bugtracker`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `project`
+-- Table structure for table `role`
 --
 
-DROP TABLE IF EXISTS `project`;
+DROP TABLE IF EXISTS `role`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `project` (
-  `project_id` int(11) NOT NULL,
-  `project` varchar(45) NOT NULL,
-  PRIMARY KEY (`project_id`),
-  UNIQUE KEY `project_id_UNIQUE` (`project_id`)
+CREATE TABLE `role` (
+  `role_id` int(11) NOT NULL,
+  `role_name` varchar(45) NOT NULL,
+  PRIMARY KEY (`role_id`),
+  UNIQUE KEY `role_id_UNIQUE` (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=cp1250;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `project`
+-- Dumping data for table `role`
 --
 
-LOCK TABLES `project` WRITE;
-/*!40000 ALTER TABLE `project` DISABLE KEYS */;
-INSERT INTO `project` VALUES (0,'Main Project'),(1,'Second Project'),(2,'Another Project'),(3,'Some Small Additional Project');
-/*!40000 ALTER TABLE `project` ENABLE KEYS */;
+LOCK TABLES `role` WRITE;
+/*!40000 ALTER TABLE `role` DISABLE KEYS */;
+INSERT INTO `role` VALUES (0,'anonymous'),(1,'reporter'),(2,'developer');
+/*!40000 ALTER TABLE `role` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

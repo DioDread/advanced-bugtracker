@@ -18,28 +18,32 @@ USE `advanced-bugtracker`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `project`
+-- Table structure for table `assignments`
 --
 
-DROP TABLE IF EXISTS `project`;
+DROP TABLE IF EXISTS `assignments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `project` (
-  `project_id` int(11) NOT NULL,
-  `project` varchar(45) NOT NULL,
-  PRIMARY KEY (`project_id`),
-  UNIQUE KEY `project_id_UNIQUE` (`project_id`)
+CREATE TABLE `assignments` (
+  `assignment_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `bug_report_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`assignment_id`),
+  UNIQUE KEY `assignment_id_UNIQUE` (`assignment_id`),
+  KEY `fk_assigmts_user_id_idx` (`user_id`),
+  KEY `fk_assignments_bug_report_id_idx` (`bug_report_id`),
+  CONSTRAINT `fk_assigmts_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_assignments_bug_report_id` FOREIGN KEY (`bug_report_id`) REFERENCES `bug_report` (`bug_report_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=cp1250;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `project`
+-- Dumping data for table `assignments`
 --
 
-LOCK TABLES `project` WRITE;
-/*!40000 ALTER TABLE `project` DISABLE KEYS */;
-INSERT INTO `project` VALUES (0,'Main Project'),(1,'Second Project'),(2,'Another Project'),(3,'Some Small Additional Project');
-/*!40000 ALTER TABLE `project` ENABLE KEYS */;
+LOCK TABLES `assignments` WRITE;
+/*!40000 ALTER TABLE `assignments` DISABLE KEYS */;
+/*!40000 ALTER TABLE `assignments` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
