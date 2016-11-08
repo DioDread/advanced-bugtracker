@@ -26,12 +26,10 @@ public class BugReportDAO implements DBWriter {
     private final EntityUtils entityUtils;
 
     private final ProjectDAO projectDAO;
-    private final LabelDAO labelDAO;
 
     public BugReportDAO() {
         dbc = new DBConnect();
         projectDAO = new ProjectDAO();
-        labelDAO = new LabelDAO();
         entityUtils = new EntityUtils();
     }
 

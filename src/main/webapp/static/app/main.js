@@ -37,7 +37,7 @@
         if (isEditingInProgress) {
             return;
         }
-        var detailsHref = document.location.href + 'details?id=' + this.getAttribute('bug-id'),
+        var detailsHref = document.location.href + '/details?id=' + this.getAttribute('bug-id'),
                 ajax = new Ajax('get', detailsHref, acceptJson);
 
         ajax.success = fillBugReportDetails;
@@ -345,7 +345,7 @@
             }
         }
         data = data.substr(0, data.length - 1);
-        var ajax = new Ajax('post', document.location.href + 'details', {'Content-Type': 'application/x-www-form-urlencoded'});
+        var ajax = new Ajax('post', document.location.href + '/details', {'Content-Type': 'application/x-www-form-urlencoded'});
         ajax.data = data;
         ajax.success = function () {
             showToast(true, 'But report updated, sucessfully!');
@@ -362,7 +362,7 @@
     function fetchProjects() {
         var projectSelects = selectAll('select[name=project]'),
                 projects = [],
-                ajax = new Ajax('get', document.location.href + 'project', acceptJson);
+                ajax = new Ajax('get', document.location.href + '/project', acceptJson);
 
         ajax.success = function (data) {
             projects = data;

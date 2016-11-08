@@ -31,7 +31,7 @@
     document.body.appendChild(container);
 
     function showStatistics() {
-        var statisticsRequest = new Ajax('get', document.location.href + 'statistics', {'Accept': 'application/json'});
+        var statisticsRequest = new Ajax('get', document.location.href + '/statistics', {'Accept': 'application/json'});
 
         statisticsRequest.success = showStatisticsDialog;
         statisticsRequest.failure = function (err) {

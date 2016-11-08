@@ -1,10 +1,14 @@
 package org.tsvil.bugtracker.entity;
 
 public class Role {
-    
+
     private long roleId;
     private String roleName;
-    
+
+    public Role() {
+
+    }
+
     public Role(long roleId, String roleName) {
         this.roleId = roleId;
         this.roleName = roleName;
@@ -37,5 +41,5 @@ public class Role {
     public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
-    
+
 }

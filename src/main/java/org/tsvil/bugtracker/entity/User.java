@@ -11,6 +11,10 @@ public class User {
     private Date createTime;
     private Role role;
 
+    public User() {
+
+    }
+
     public User(
             long userId,
             String username,
@@ -110,7 +114,6 @@ public class User {
     public void setRole(Role role) {
         this.role = role;
     }
-    
-    //TODO: if necessary implement to JSON method.
 
+    //TODO: if necessary implement to JSON method.
 }

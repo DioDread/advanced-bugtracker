@@ -1,14 +1,32 @@
 window.onload = function () {
     var loginForm = select('.login-form-cont'), regForm = select('.register-form-cont'), hide = 'hide',
-            usernameEl = loginForm.select('input[name=username]'), passwordEl = loginForm.select('input[name=password]'),
-            signInBtn = select('#sign-in'), signUpBtn = select('#sign-up'), 
+            usernameInput = loginForm.select('input[name=username]'), passwordInput = loginForm.select('input[name=password]'),
+            signInBtn = select('#sign-in'), signUpBtn = select('#sign-up'),
             regBtn = select('#registrate'), regCancelBtn = select('#reg-cancel');
-    
+
+    signInBtn.addEventListener('click', getLogin);
     signUpBtn.addEventListener('click', showRegistrationForm);
     regCancelBtn.addEventListener('click', showLoginForm);
 
-    if (usernameEl.value.length > 0) {
+    if (usernameInput.value.length > 0) {
         cleanUpAutofill();
+    }
+
+    function getLogin() {
+        var getLoginUrl = document.location.href + '?username=' + usernameInput.value + '&password=' + passwordInput.value,
+                ajax = new Ajax('get', getLoginUrl, {'Accept': 'application/json;'});
+        
+        ajax.success = function(response) {
+            if (response.success) {
+                document.location.replace(document.location.href + 'main');
+            }
+        };
+        
+        ajax.failure = function(err) {
+            console.log(err);
+        };
+        
+        ajax.call();
     }
 
     function showRegistrationForm() {
@@ -22,7 +40,7 @@ window.onload = function () {
     }
 
     function cleanUpAutofill() {
-        usernameEl.value = '';
-        passwordEl.value = '';
+        usernameInput.value = '';
+        passwordInput.value = '';
     }
 };
