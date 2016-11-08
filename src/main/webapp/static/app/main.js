@@ -96,7 +96,7 @@
             var filtered = data.filter(function (el) {
                 return el.state != 4 && el.state != 5;
             });
-            bugsCountEl.innerText = bugsCountEl.innerText.replace('{0}', filtered.length);
+            bugsCountEl.innerHTML = bugsCountEl.innerHTML.replace('{0}', filtered.length);
         };
 
         getBugReportsList.failure = defaultErrorHandler;

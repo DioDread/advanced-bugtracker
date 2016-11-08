@@ -22,10 +22,10 @@
                 <h1>Advanced Bugtracker:</h1>
                 <c:choose>
                     <c:when test="${isDeveloper}">
-                        <span class="header-message">Hello <c:out value="${username}"/>, today we have {0} unresolved bugs to do!</span>
+                        <span class="header-message">Hello <strong><c:out value="${username}"/></strong>, today we have {0} unresolved bugs to do!</span>
                     </c:when>
                     <c:otherwise>
-                        <span class="header-message">Hello <c:out value="${username}"/>!</span>
+                        <span class="header-message">Hello <strong><c:out value="${username}"/></strong>!</span>
                     </c:otherwise>
                 </c:choose>
                 <button class="btn-lg report-a-bug">Report a Bug</button>
