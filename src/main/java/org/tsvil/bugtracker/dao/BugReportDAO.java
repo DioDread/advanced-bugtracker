@@ -26,27 +26,33 @@ public class BugReportDAO implements DBWriter {
     private final EntityUtils entityUtils;
 
     private final ProjectDAO projectDAO;
+    private final UserDAO userDAO;
 
     public BugReportDAO() {
         dbc = new DBConnect();
         projectDAO = new ProjectDAO();
+        userDAO = new UserDAO();
         entityUtils = new EntityUtils();
     }
 
     public ArrayList<BugReport> getAllBugReports() throws SQLException, ConfigurationException {
-        return selectBugReports(null, null, null, true);
+        return selectBugReports(null, null, null, null, true);
     }
 
     public BugReport findBugReportById(int id) throws SQLException, ConfigurationException {
-        return selectBugReports(id, null, null, false).get(0);
+        return selectBugReports(id, null, null, null, false).get(0);
     }
 
-    public ArrayList<BugReport> getBugReportsWithOffset(PageInfo pageInfo) throws SQLException, ConfigurationException {
-        return selectBugReports(null, pageInfo, null, true);
+    public ArrayList<BugReport> getBugRefilterportsWithOffset(PageInfo pageInfo) throws SQLException, ConfigurationException {
+        return selectBugReports(null, pageInfo, null, null, true);
     }
 
     public ArrayList<BugReport> getBugReportsWithFilterAndOffset(PageInfo pageInfo, State filter) throws SQLException, ConfigurationException {
-        return selectBugReports(null, pageInfo, filter, true);
+        return selectBugReports(null, pageInfo, filter, null, true);
+    }
+    
+    public ArrayList<BugReport> getBugReportsForSpecificUser(Long userId) throws SQLException, ConfigurationException {
+        return selectBugReports(null, null, null, userId, true);
     }
 
     public void insertBugReport(BugReport br) throws SQLException, ConfigurationException {
@@ -63,7 +69,7 @@ public class BugReportDAO implements DBWriter {
                     + dateResolved + ", "
                     + dateUpdated + ", "
                     + br.getProject().getProjectId() + ", '"
-                    + br.getLabels() + "');";
+                    + br.getLabels() + "', " + br.getAssignedUser().getUserId() + ", " + br.getReportedUser().getUserId() + ");";
             connection = dbc.getConnection();
             statement = connection.createStatement();
             statement.executeUpdate(query);
@@ -114,7 +120,7 @@ public class BugReportDAO implements DBWriter {
         }
     }
 
-    private ArrayList<BugReport> selectBugReports(Integer id, PageInfo pageInfo, State filter, boolean isShortRecord) throws SQLException, ConfigurationException {
+    private ArrayList<BugReport> selectBugReports(Integer id, PageInfo pageInfo, State filter, Long userId, boolean isShortRecord) throws SQLException, ConfigurationException {
         String condition = ";";
         if (id != null) {
             condition = " where bug_report_id=" + id;
@@ -122,6 +128,8 @@ public class BugReportDAO implements DBWriter {
             condition = " where state=" + filter.getValue();
         } else if (pageInfo != null) {
             condition += " limit " + pageInfo.limit + " offset " + pageInfo.offset;
+        } else if (userId != null) {
+            condition = " where reported_user=" + userId;
         }
         condition += ";";
 
@@ -130,7 +138,7 @@ public class BugReportDAO implements DBWriter {
             fieldsToSelect = "bug_report_id, name, date_reported, reporter, priority, state";
         } else {
             fieldsToSelect = "bug_report_id, name, date_reported, reporter, description, desired_resolution_date, "
-                    + "priority, state, date_resolved, date_updated, project, labels";
+                    + "priority, state, date_resolved, date_updated, project, labels, assigned_user, reported_user";
         }
         ArrayList<BugReport> allBugReports = new ArrayList<>();
         try {
@@ -198,6 +206,8 @@ public class BugReportDAO implements DBWriter {
                 .dateUpdated(rs.getDate("date_updated"))
                 .project(projectDAO.getProjectById(rs.getInt("project")))
                 .labels(rs.getString("labels"))
+                .assignedUser(userDAO.findUserById(rs.getLong("assigned_user")))
+                .reportedUser(userDAO.findUserById(rs.getLong("reported_user")))
                 .build();
         return result;
     }

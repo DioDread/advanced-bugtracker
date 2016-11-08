@@ -244,6 +244,8 @@ public class BugReport {
                 .add("dateUpdated", dateUpdated != null ? dateUpdated.toString() : "")
                 .add("labels", labels != null ? labels : "")
                 .add("project", project != null ? project.getName() : "")
+                .add("assignedUser", assignedUser != null ? assignedUser.getUsername() : "")
+                .add("reportedUser", reportedUser != null ? reportedUser.getUsername() : "")
                 .build();
     }
 

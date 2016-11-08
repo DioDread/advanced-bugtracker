@@ -8,7 +8,7 @@
             newBugBtn = select('.report-a-bug'),
             bugsCountEl = select('.header-message'),
             acceptJson = {'Accept': 'application/json'},
-            isEditingInProgress = false, isCreationInProgress = false;
+    isEditingInProgress = false, isCreationInProgress = false;
 
     recordTableRows.forEach(function (el) {
         el.addEventListener('click', handleBugRecordClick);
@@ -20,7 +20,9 @@
     });
 
     newBugBtn.addEventListener('click', showNewBugDialog);
-    editBugBtn.addEventListener('click', enableBugEditing);
+    if (editBugBtn) {
+        editBugBtn.addEventListener('click', enableBugEditing);
+    }
     submitEditBugBtn.addEventListener('click', updateBug);
     editCancelBtn.addEventListener('click', cancelBugEditing);
 
@@ -107,7 +109,7 @@
 
         requestBugsList.success = function (data) {
             var row, col;
-            
+
             for (var i = table.rows.length - 1; i > 0; i--) {
                 table.deleteRow(i);
             }
@@ -154,6 +156,7 @@
                 dateUpdatedEl = select('.date-updated'),
                 desiredResolutionEl = select('.desired-resolution-date'),
                 reporterEl = select('.reporter'),
+                assignedEl = select('.assigned'),
                 priorityEl = select('.priority'),
                 stateEl = select('.state'),
                 projectEl = select('.project'),
@@ -167,7 +170,9 @@
             labels = [];
         }
 
-        editBugBtn.style.display = 'inline';
+        if (editBugBtn) {
+            editBugBtn.style.display = 'inline';
+        }
 
         bugReportIdInput.value = report.bugReportId;
 
@@ -176,6 +181,7 @@
         dateResolvedEl.innerText = report.dateResolved == '' ? 'not yet resolved' : report.dateResolved;
         dateUpdatedEl.innerText = report.dateUpdated == '' ? 'never' : report.dateUpdated;
         reporterEl.innerText = report.reporter;
+        assignedEl.innerText = report.reportedUser;
         desiredResolutionEl.innerText = report.desiredResolutionDate;
         priorityEl.innerText = resolvePriority(report.priority);
         stateEl.innerText = resolveState(report.state);
@@ -434,10 +440,10 @@
 
         labelDiv.innerText = label ? label.name : labelNameInput.value;
         labelDiv.style.backgroundColor = label ? label.color : colorPickerInput.value;
-        
+
         var rgb = hexToRgb(label ? label.color : colorPickerInput.value);
-        var contrast = Math.round(((parseInt(rgb.r) * 299) + (parseInt(rgb.g) * 587) + (parseInt(rgb.b) * 114)) /1000);
-        
+        var contrast = Math.round(((parseInt(rgb.r) * 299) + (parseInt(rgb.g) * 587) + (parseInt(rgb.b) * 114)) / 1000);
+
         if (contrast > 125) {
             labelDiv.style.color = 'black';
         } else {
@@ -471,7 +477,7 @@
     function defaultErrorHandler() {
         showToast(false, 'Some error occured, please contact administrator.');
     }
-    
+
     function refreshPageState() {
         refreshBugCountMsg();
         refreshBugsList();

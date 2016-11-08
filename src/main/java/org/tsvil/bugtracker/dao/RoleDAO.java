@@ -18,7 +18,7 @@ public class RoleDAO extends GenericDAO {
             connection = dbc.getConnection();
             statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("select role_id, role_name from `" + AppConfig.getDbName() + "`.role "
-                    + "where roleId=" + roleId + ";");
+                    + "where role_id=" + roleId + ";");
             while (rs.next()) {
                 long id = rs.getLong("role_id");
                 String name = rs.getString("role_name");

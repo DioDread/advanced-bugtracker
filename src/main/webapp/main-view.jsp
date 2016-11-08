@@ -13,12 +13,21 @@
         <link href="<c:url value="/static/res/statistics.css"/>" rel="stylesheet">
         <link href="<c:url value="/static/favicon.png"/>" rel="icon" type="image/png">
         <title>Advanced Bugtracker</title>
+
+        <c:set var="isDeveloper" scope="session" value="${role.getRoleId() == 2}"/>
     </head>
     <body>
         <div class="main-viewport">
             <header class="header gradient-back">
                 <h1>Advanced Bugtracker:</h1>
-                <span class="header-message">Hello, today we have {0} unresolved bugs to do!</span>
+                <c:choose>
+                    <c:when test="${isDeveloper}">
+                        <span class="header-message">Hello <c:out value="${username}"/>, today we have {0} unresolved bugs to do!</span>
+                    </c:when>
+                    <c:otherwise>
+                        <span class="header-message">Hello <c:out value="${username}"/>!</span>
+                    </c:otherwise>
+                </c:choose>
                 <button class="btn-lg report-a-bug">Report a Bug</button>
                 <button class="btn-lg show-stats">Statistics</button>
             </header>
@@ -53,7 +62,9 @@
                                 <td><c:out value="${report.name}" /></td>
                                 <td><c:out value="${report.reporter}" /></td>
                                 <td><c:out value="${report.dateReported}" /></td>
-                                <td><i class="fa fa-times remove-bug-record"></i></td>
+                                <c:if test="${isDeveloper}">
+                                    <td><i class="fa fa-times remove-bug-record"></i></td>
+                                    </c:if>
                             </tr>
                         </c:forEach>
                     </table>
@@ -64,7 +75,9 @@
                     <form name="bug-report-details">
                         <span class="editable-control" control-type="input">
                             <h2 class="bug-report-title data">Bug details.</h2>
-                            <button class="btn-lg edit-a-bug" style="display: none;">Edit Bug Report</button>
+                            <c:if test="${isDeveloper}">
+                                <button class="btn-lg edit-a-bug" style="display: none;">Edit Bug Report</button>
+                            </c:if>
                             <input type="text" name="name" class="title-input" placeholder="Enter subject" style="display: none;">
                         </span>
                         <div class="mod-header">
@@ -79,6 +92,10 @@
                             <p class="editable-control" control-type="input">
                                 <span class="detail-label">Reported by: </span><span class="reporter data"></span>
                                 <input type="text" name="reporter" style="display: none;">
+                            </p>
+                            <p class="editable-control" control-type="input">
+                                <span class="detail-label">Assigned to: </span><span class="assigned data"></span>
+                                <input type="text" name="assigned" style="display: none;">
                             </p>
                             <p class="editable-control" control-type="input">
                                 <span class="detail-label">Desired resolution date: </span><span class="desired-resolution-date data"></span>

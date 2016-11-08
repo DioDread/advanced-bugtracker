@@ -69,6 +69,16 @@ public class BugReportBuilder {
         bugReport.setLabels(labels);
         return this;
     }
+    
+    public BugReportBuilder assignedUser(User user) {
+        bugReport.setAssignedUser(user);
+        return this;
+    }
+    
+    public BugReportBuilder reportedUser(User user) {
+        bugReport.setReportedUser(user);
+        return this;
+    }
 
     public BugReport build() {
         return bugReport;

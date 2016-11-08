@@ -7,6 +7,11 @@ window.onload = function () {
     signInBtn.addEventListener('click', getLogin);
     signUpBtn.addEventListener('click', showRegistrationForm);
     regCancelBtn.addEventListener('click', showLoginForm);
+    loginForm.addEventListener('keydown', function(evt) {
+        if(evt.keyCode == '13') {
+            getLogin();
+        }
+    });
 
     if (usernameInput.value.length > 0) {
         cleanUpAutofill();

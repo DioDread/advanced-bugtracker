@@ -40,6 +40,7 @@ public class UserServlet extends HttpServlet {
             User user = userDAO.findUserByUsername(creds.getUsername());
             if (user.getPassword() == null ? creds.getPassword() == null : user.getPassword().equals(creds.getPassword())) {
                 req.getSession().setAttribute("username", user.getUsername());
+                req.getSession().setAttribute("userId", user.getUserId());
                 req.getSession().setAttribute("userRole", user.getRole());
                 resp.setStatus(200);
                 resp.setContentType("application/json");

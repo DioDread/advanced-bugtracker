@@ -10,6 +10,7 @@
         <link href="<c:url value="/static/res/font-awesome/css/font-awesome.css"/>" rel="stylesheet">
         <link href="<c:url value="/static/res/login-form.css"/>" rel="stylesheet">
         <link href="<c:url value="/static/res/gradient-back.css"/>" rel="stylesheet">
+        <link href="<c:url value="/static/favicon.png"/>" rel="icon" type="image/png">
     </head>
     <body class="gradient-back">
 
