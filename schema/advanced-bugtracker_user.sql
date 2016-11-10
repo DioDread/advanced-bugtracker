@@ -1,10 +1,10 @@
-CREATE DATABASE  IF NOT EXISTS `advanced-bugtracker` /*!40100 DEFAULT CHARACTER SET cp1250 */;
+CREATE DATABASE  IF NOT EXISTS `advanced-bugtracker` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `advanced-bugtracker`;
--- MySQL dump 10.13  Distrib 5.7.13, for linux-glibc2.5 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.12, for Win64 (x86_64)
 --
--- Host: localhost    Database: advanced-bugtracker
+-- Host: 127.0.0.1    Database: advanced-bugtracker
 -- ------------------------------------------------------
--- Server version	5.7.16
+-- Server version	5.7.15-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -31,7 +31,7 @@ CREATE TABLE `user` (
   `create_time` datetime(6) NOT NULL,
   `user_id` int(11) NOT NULL,
   `role_id` int(11) NOT NULL,
-  PRIMARY KEY (`user_id`),
+  PRIMARY KEY (`user_id`,`password`,`email`),
   UNIQUE KEY `user_id_UNIQUE` (`user_id`),
   KEY `fk_user_role_idx` (`role_id`),
   CONSTRAINT `fk_user_role` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -44,7 +44,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('0','default@email.com','default','2016-11-03 22:57:52.000000',0,2);
+INSERT INTO `user` VALUES ('0','default@email.com','default','2016-11-03 22:57:52.000000',0,2),('user','user@user.user','user','2016-11-09 11:21:27.000000',1,1),('dev','dev@dev.dev','dev','2016-11-09 11:21:27.000000',2,2),('dev1','dev1@dev.dev','dev1','2016-11-09 11:21:27.000000',3,2),('dev2','dev2@dev.dev','dev2','2016-11-09 11:21:27.000000',4,2),('dev3','dev3@dev.dev','dev3','2016-11-09 11:21:27.000000',5,2);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -57,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-11-03 23:12:12
+-- Dump completed on 2016-11-10 10:06:19
